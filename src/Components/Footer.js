@@ -1,39 +1,40 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import emailjs from 'emailjs-com';
-
-const EMAILJS_TOKEN = process.env.REACT_APP_EMAILJS_TOKEN;
-const SERVICEID= process.env.REACT_APP_SERVICEID;
-const TEMPLATEID= process.env.REACT_APP_TEMPLATEID;
+import emailjs from '@emailjs/browser'; // Notez le changement ici
 
 const ContactForm = () => {
+  useEffect(() => {
+    // Initialiser EmailJS
+    emailjs.init(process.env.REACT_APP_EMAILJS_TOKEN);
+  }, []);
+
   const validationSchema = Yup.object({
     name: Yup.string().required('Required'),
     email: Yup.string().email('Invalid email address').required('Required'),
     message: Yup.string().required('Required'),
   });
 
-  const sendEmail = (values, resetForm, setSubmitting) => {
-    const serviceID = SERVICEID;
-    const templateID = TEMPLATEID;
-    const userID = EMAILJS_TOKEN;
-
-    const templateParams = {
-      name: values.name,
-      email: values.email,
-      message: values.message,
-    };
-
-    emailjs.send(serviceID, templateID, templateParams, userID)
-      .then((response) => {
-        alert('Message envoyé avec succès !');
-        resetForm();
-        setSubmitting(false);
-      }, (error) => {
-        alert('Échec de l\'envoi du message, veuillez réessayer.');
-        setSubmitting(false);
-      });
+  const sendEmail = async (values, resetForm, setSubmitting) => {
+    try {
+      await emailjs.send(
+        process.env.REACT_APP_SERVICEID,
+        process.env.REACT_APP_TEMPLATEID,
+        {
+          name: values.name,
+          email: values.email,
+          message: values.message,
+        }
+      );
+      
+      alert('Message envoyé avec succès !');
+      resetForm();
+    } catch (error) {
+      console.error('Erreur:', error);
+      alert('Échec de l\'envoi du message, veuillez réessayer.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
