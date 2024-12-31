@@ -1,0 +1,62 @@
+@keyframes sparkle {
+    0% {
+      background-position: 0% 50%;
+      box-shadow: 0 0 25px rgba(96, 165, 250, 0.8);
+      transform: scale(1);
+    }
+    50% {
+      background-position: 100% 50%;
+      box-shadow: 0 0 35px rgba(147, 197, 253, 0.9);
+      transform: scale(1.1);
+    }
+    100% {
+      background-position: 0% 50%;
+      box-shadow: 0 0 25px rgba(96, 165, 250, 0.8);
+      transform: scale(1);
+    }
+  }
+  
+  .sparkle-effect {
+    background: linear-gradient(
+      45deg,
+      #3B82F6,
+      #60A5FA,
+      #93C5FD,
+      #3B82F6
+    );
+    background-size: 300% 100%;
+    animation: sparkle 1.5s ease infinite;
+    transition: all 0.3s ease;
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255,255,255,0.7);
+    border: 2px solid rgba(255,255,255,0.2);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+  }
+  
+  .sparkle-effect::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle,
+      rgba(250,250,250,0.7) 0%,
+      transparent 70%
+    );
+    animation: rotate 2s linear infinite;
+    z-index: -1;
+  }
+  
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }

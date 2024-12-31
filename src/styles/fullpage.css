@@ -1,0 +1,61 @@
+.full-page-scroll-container {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+  }
+  
+  .page-scroll-section {
+    height: 100vh;
+    width: 100%;
+    
+  }
+  
+  .page-scroll-pagination {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+  }
+  
+  /* .page-scroll-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #60A5FA;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.5;
+  } */
+  
+  /* .page-scroll-dot.active {
+    opacity: 1;
+    transform: scale(1.2);
+    background-color: #3B82F6;
+  }
+   */
+  /* .page-scroll-dot:hover {
+    transform: scale(1.2);
+  }
+   */
+  /* Styles pour le contenu */
+  .page-scroll-section > * {
+    height: 100%;
+    width: 100%;
+  }
+  
+  
+  /* Styles responsive */
+  @media (max-width: 768px) {
+    .page-scroll-pagination {
+      right: 10px;
+    }
+    
+    .page-scroll-dot {
+      width: 8px;
+      height: 8px;
+    }
+  }

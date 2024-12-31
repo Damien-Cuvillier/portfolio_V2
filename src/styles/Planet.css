@@ -1,0 +1,98 @@
+.testimonial {
+    position: relative;
+    z-index: 1;
+    padding: 2rem 0;
+  }
+  
+  .tf8-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .tf8-flex {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .tf8-block {
+    display: block;
+  }
+  
+  .tf8-width-2xl {
+    width: 8rem;
+  }
+  
+  .tf8-height-2xl {
+    height: 8rem;
+  }
+  
+  /* .tf8-radius-50% {
+    border-radius: 50%;
+  } */
+  
+  .tf8-border {
+    border-style: solid;
+  }
+  
+  .tf8-border-bg {
+    border-color: var(--border-bg, #000);
+  }
+  
+  .tf8-border-2 {
+    border-width: 2px;
+  }
+  
+  .tf8-shadow-sm {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .testimonial__block-wrapper {
+    margin-bottom: 2rem;
+  }
+  
+  .tf8-text-lg {
+    font-size: 1.125rem;
+  }
+  
+  .tf8-text-center {
+    text-align: center;
+  }
+  
+  .tf8-line-height-md {
+    line-height: 1.5;
+  }
+  
+  .tf8-icon {
+    fill: currentColor;
+  }
+  
+  .tf8-icon--2xl {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .tf8-color-contrast-higher {
+    color: #000;
+  }
+  
+  /* .tf8-opacity-10% {
+    opacity: 0.1;
+  }
+   */
+  .tf8-text-uppercase {
+    text-transform: uppercase;
+  }
+  
+  .tf8-letter-spacing-md {
+    letter-spacing: 0.1rem;
+  }
+  
+  .tf8-color-contrast-medium {
+    color: #666;
+  }
+  
+  .tf8-margin-top-4xs {
+    margin-top: 0.25rem;
+  }
+  
