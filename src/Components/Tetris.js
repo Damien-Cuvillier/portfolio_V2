@@ -5,6 +5,8 @@ import { faArrowUp, faArrowRight, faArrowLeft, faArrowDown, faGamepad, faLock, f
 import Swal from 'sweetalert2';
 import '../App.css';
 import '../styles/tetrisModal.css'
+import Competences from './Competences';
+import Footer from './Footer';
 // Données des projets
 const projects = [
   {
@@ -16,7 +18,7 @@ const projects = [
     ],
     imageUrl: process.env.PUBLIC_URL + '/images/Booki.webp',
     projectURL: 'https://github.com/Damien-Cuvillier/Projet-2-Booki',
-    lines: 1
+    lines: 2
   },
   {
     id: 2,
@@ -27,7 +29,7 @@ const projects = [
     ],
     imageUrl: process.env.PUBLIC_URL + '/images/Sophie.webp',
     projectURL: 'https://github.com/Damien-Cuvillier/Projet-3-Sophie-Bluel',
-    lines: 2
+    lines: 3
   },
   {
     id: 3,
@@ -40,7 +42,7 @@ const projects = [
     ],
     imageUrl: process.env.PUBLIC_URL + '/images/Nina.webp',
     projectURL: 'https://github.com/Damien-Cuvillier/P4-Nina-Carducci',
-    lines: 3
+    lines: 4
   },
   {
     id:4,
@@ -52,7 +54,7 @@ const projects = [
     ],
     imageUrl: process.env.PUBLIC_URL + '/images/Kasa.webp',
     projectURL: 'https://github.com/Damien-Cuvillier/P5_Kasa',
-    lines: 4
+    lines: 5
   },
   {
     id: 5,
@@ -64,7 +66,7 @@ const projects = [
     ],
     imageUrl: process.env.PUBLIC_URL + '/images/Grimoire.webp',
     projectURL: 'https://github.com/Damien-Cuvillier/P6_Grimoire',
-    lines: 5
+    lines: 6
   },
   {
     id: 6,
@@ -76,9 +78,31 @@ const projects = [
       'J\'ai aussi utilisé un outil de gestion de projet, comme Notion, pour organiser le projet et créer un tableau Kanban. Cela aide à suivre le déroulement du projet de manière structurée et efficace. Présentation des résultats dans un rapport d\'intervention',
     ],
     imageUrl: process.env.PUBLIC_URL + '/images/MenuMaker.webp',
-    lines: 6
+    lines: 7
   },
   // Ajoutez les autres projets ici...
+];
+const skills = [
+  {
+    id: 1,
+    title: 'Compétences',
+    description: [
+      'Mes compétences en développement web',
+      'Front-end et Back-end'
+    ],
+    imageUrl: process.env.PUBLIC_URL + '/images/skills.webp',
+    lines: 1
+  },
+  {
+    id: 2,
+    title: 'Formulaire de contact',
+    description: [
+      'Formulaire de contact',
+      'Envoyez-moi un message'
+    ],
+    imageUrl: process.env.PUBLIC_URL + '/images/contact.webp',
+    lines: 8
+  }
 ];
 
 const TetrisComponent = () => {
@@ -88,13 +112,106 @@ const TetrisComponent = () => {
   const [previousLinesCleared, setPreviousLinesCleared] = useState(0);
   const [currentLinesCleared, setCurrentLinesCleared] = useState(0);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [unlockedSkills, setUnlockedSkills] = useState([]);
+  const [selectedSkill, setSelectedSkill] = useState(null);
+
+  // Ajouter un useEffect pour gérer le focus
+  useEffect(() => {
+    // Sélectionner tous les boutons qui pourraient avoir le focus
+    const buttons = document.querySelectorAll('button');
+    // Retirer le focus de tous les boutons
+    buttons.forEach(button => button.blur());
+    
+    // Optionnel : focus sur le conteneur du jeu pour s'assurer que les contrôles fonctionnent
+    const gameContainer = document.querySelector('.tetris-container');
+    if (gameContainer) {
+      gameContainer.focus();
+    }
+  }, []); // S'exécute une seule fois au montage du composant
+
+  // Déplacer les composants à l'intérieur de TetrisComponent
+  const SkillThumbnail = ({ skill }) => (
+    <div 
+      className={`skill-thumbnail ${unlockedSkills.includes(skill.id) ? 'unlocked hover:cursor-pointer' : 'locked'}`}
+      onClick={() => unlockedSkills.includes(skill.id) && setSelectedSkill(skill)}
+    >
+      <div className="relative group w-full h-[150px]">
+        <img 
+          src={skill.imageUrl} 
+          alt={skill.title}
+          className={`w-full h-full object-contain rounded-lg transition-all duration-300 hover:transform hover:scale-105
+            ${unlockedSkills.includes(skill.id) ? 'filter-none hover:brightness-110' : 'grayscale filter blur-sm'}`}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          {!unlockedSkills.includes(skill.id) && (
+            <FontAwesomeIcon icon={faLock} className="text-white text-2xl" />
+          )}
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-center rounded-b-lg">
+          <p className="text-sm">{skill.title}</p>
+          <p className="text-xs">{unlockedSkills.includes(skill.id) ? 'Débloqué' : `${skill.lines} lignes requises`}</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SkillModal = ({ skill, onClose }) => {
+    if (!skill) return null;
+
+    const handleClose = () => {
+      onClose();
+      if (gameController) {
+        gameController.resume();
+      }
+    };
+
+    return (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <div 
+          className="bg-white rounded-lg max-w-[calc(4xl+150px)] w-[calc(70%+50px)] mx-4 relative "
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button 
+            onClick={handleClose}
+            className="absolute top-16 right-4 text-gray-700 hover:text-gray-800 transition-colors text-xl"
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          <div className="flex justify-between items-start mb-4">
+            <h3 className="text-2xl font-bold text-gray-800">{skill.title}</h3>
+          </div>
+          {skill.id === 1 ? (
+            <Competences />
+          ) : (
+            <Footer showOnlyForm={true} />
+          )}
+        </div>
+      </div>
+    );
+  };
 
   useEffect(() => {
     if (gameState && currentLinesCleared > previousLinesCleared) {
+      // Filtrer uniquement les nouveaux projets débloqués
       const newUnlockedProjects = projects
-        .filter(project => project.lines <= currentLinesCleared && !unlockedProjects.includes(project.id))
+        .filter(project => 
+          project.lines <= currentLinesCleared && 
+          !unlockedProjects.includes(project.id)
+        )
         .map(project => project.id);
-
+  
+      // Filtrer uniquement les nouvelles compétences débloquées
+      const newUnlockedSkillIds = skills
+        .filter(skill => 
+          skill.lines <= currentLinesCleared && 
+          !unlockedSkills.includes(skill.id)
+        )
+        .map(skill => skill.id);
+  
+      // Mettre à jour les états seulement s'il y a de nouveaux éléments débloqués
       if (newUnlockedProjects.length > 0) {
         setUnlockedProjects([...unlockedProjects, ...newUnlockedProjects]);
         Swal.fire({
@@ -105,9 +222,21 @@ const TetrisComponent = () => {
           showConfirmButton: false
         });
       }
+  
+      if (newUnlockedSkillIds.length > 0) {
+        setUnlockedSkills([...unlockedSkills, ...newUnlockedSkillIds]);
+        Swal.fire({
+          title: 'Compétences débloquées !',
+          text: `Vous avez débloqué ${newUnlockedSkillIds.length} nouvelle(s) compétence(s) !`,
+          icon: 'success',
+          timer: 2000,
+          showConfirmButton: false
+        });
+      }
+  
       setPreviousLinesCleared(currentLinesCleared);
     }
-  }, [currentLinesCleared, gameState, unlockedProjects, previousLinesCleared]);
+  }, [currentLinesCleared, gameState, unlockedProjects, unlockedSkills, previousLinesCleared]);
   useEffect(() => {
     if (selectedProject && gameController) {
       gameController.pause();
@@ -115,68 +244,75 @@ const TetrisComponent = () => {
   }, [selectedProject, gameController]);
   
   // Modal Component
-  const ProjectModal = ({ project, onClose }) => {
-    if (!project) return null;
-  
-    return (
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <div 
-          className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-2xl font-bold text-gray-800">{project.title}</h3>
-            <button 
-              onClick={onClose} 
-              className="text-gray-500 hover:text-gray-700 transition-colors"
-            >
-              <FontAwesomeIcon icon={faTimes} className="text-xl" />
-            </button>
-          </div>
-          <div className="modal-image-container mb-4">
-            <img 
-              src={project.imageUrl} 
-              alt={project.title}
-              className="w-full rounded-lg object-contain max-h-[60vh]"
-            />
-          </div>
-          <div className="space-y-4">
-            {project.description.map((paragraph, index) => (
-              <p key={index} className="text-gray-600">{paragraph}</p>
-            ))}
-          </div>
-          {project.projectURL && (
-            <div className="mt-6">
-              <a
-                href={project.projectURL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-              >
-                Voir sur GitHub
-              </a>
-            </div>
-          )}
-        </div>
-      </div>
-    );
+const ProjectModal = ({ project, onClose }) => {
+  if (!project) return null;
+
+  const handleClose = () => {
+    onClose(); // Ferme la modale
+    if (gameController) {
+      gameController.resume(); // Reprend le jeu
+    }
   };
+
+  return (
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      onKeyDown={(e) => e.stopPropagation()}
+    >
+      <div 
+        className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex justify-between items-start mb-4">
+          <h3 className="text-2xl font-bold text-gray-800">{project.title}</h3>
+          <button 
+            onClick={handleClose} 
+            className="text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            <FontAwesomeIcon icon={faTimes} className="text-xl" />
+          </button>
+        </div>
+        <div className="modal-image-container mb-4">
+          <img 
+            src={project.imageUrl} 
+            alt={project.title}
+            className="w-full rounded-lg object-contain max-h-[60vh]"
+          />
+        </div>
+        <div className="space-y-4">
+          {project.description.map((paragraph, index) => (
+            <p key={index} className="text-gray-600">{paragraph}</p>
+          ))}
+        </div>
+        {project.projectURL && (
+          <div className="mt-6">
+            <a
+              href={project.projectURL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block relative bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors "
+            >
+              Voir sur GitHub
+            </a>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
   // Composant pour afficher un projet
   const ProjectThumbnail = ({ project, isLeft }) => (
     <div 
-      className={`project-thumbnail ${unlockedProjects.includes(project.id) ? 'unlocked' : 'locked'}`}
+      className={`project-thumbnail ${unlockedProjects.includes(project.id) ? 'unlocked hover:cursor-pointer' : 'locked'}`}
       onClick={() => unlockedProjects.includes(project.id) && setSelectedProject(project)}
     >
-      <div className="relative group">
+      <div className="relative group w-full h-[150px]">
         <img 
           src={project.imageUrl} 
           alt={project.title}
-          className={`w-full h-32 object-cover rounded-lg transition-all duration-300
-            ${unlockedProjects.includes(project.id) ? 'filter-none' : 'grayscale filter blur-sm'}`}
+          className={`w-full h-full object-contain rounded-lg transition-all duration-300 hover:transform hover:scale-105
+            ${unlockedProjects.includes(project.id) ? 'filter-none hover:brightness-110' : 'grayscale filter blur-sm'}`}
         />
         <div className="absolute inset-0 flex items-center justify-center">
           {!unlockedProjects.includes(project.id) && (
@@ -202,15 +338,25 @@ const TetrisComponent = () => {
             Débloquez mes projets en complétant des lignes au Tetris !
           </p>
         </div>
-        <div className="left-projects space-y-4">
-          {projects.slice(0, 2).map(project => (
-            <ProjectThumbnail key={project.id} project={project} isLeft={true} />
-          ))}
+        <div className="left-projects flex flex-col space-y-4">
+          {skills
+            .filter(skill => skill.id === 1)
+            .map(skill => (
+              <SkillThumbnail key={skill.id} skill={skill} />
+            ))}
+          {projects
+            .filter(project => ['Booki', 'Sophie Bluel', 'Nina Carducci'].includes(project.title))
+            .map(project => (
+              <ProjectThumbnail key={project.id} project={project} isLeft={true} />
+            ))}
         </div>
       </div>
 
       {/* Tetris au centre */}
-      <div className="tetris-container bg-white rounded-lg shadow-lg p-6">
+      <div 
+        className="tetris-container bg-white rounded-lg shadow-lg p-6 focus:outline-none" 
+        tabIndex="-1"
+      >
         <h2 className='text-2xl font-bold text-gray-800 mb-4 text-center'>
           <FontAwesomeIcon icon={faGamepad} /> Tetris <FontAwesomeIcon icon={faGamepad} />
         </h2>
@@ -240,6 +386,19 @@ const TetrisComponent = () => {
             if (gameController !== controller) setGameController(controller);
             if (gameState !== state) setGameState(state);
             if (currentLinesCleared !== linesCleared) setCurrentLinesCleared(linesCleared);
+
+            const handleRestart = () => {
+              if (gameController) {
+                gameController.restart();
+                // Retirer le focus du bouton après le redémarrage
+                document.activeElement.blur();
+                // Redonner le focus au conteneur du jeu
+                const gameContainer = document.querySelector('.tetris-container');
+                if (gameContainer) {
+                  gameContainer.focus();
+                }
+              }
+            };
 
             return (
               <div className="tetris-game">
@@ -281,7 +440,7 @@ const TetrisComponent = () => {
                   <div>"P" Pause</div>
                 </div>
                 <button
-                  onClick={() => gameController && gameController.restart()}
+                  onClick={handleRestart}
                   className="restart-button text-gray-800 font-bold mt-12 bg-blue-400 hover:bg-blue-600 text-white py-2 px-4 rounded"
                 >
                   Rejouer
@@ -293,10 +452,24 @@ const TetrisComponent = () => {
       </div>
 
       {/* Colonne de droite */}
-      <div className="right-column w-1/5 space-y-4">
-        {projects.slice(2).map(project => (
-          <ProjectThumbnail key={project.id} project={project} isLeft={false} />
-        ))}
+      <div className="right-column w-1/5">
+        <div className="right-projects flex flex-col space-y-4">
+          {projects
+            .filter(project => ['Kasa', 'Mon vieux grimoire'].includes(project.title))
+            .map(project => (
+              <ProjectThumbnail key={project.id} project={project} isLeft={false} />
+            ))}
+          {projects
+            .filter(project => project.title === 'Menu Maker by Qwenta')
+            .map(project => (
+              <ProjectThumbnail key={project.id} project={project} isLeft={false} />
+            ))}
+          {skills
+            .filter(skill => skill.id === 2)
+            .map(skill => (
+              <SkillThumbnail key={skill.id} skill={skill} />
+            ))}
+        </div>
       </div>
 
       {/* Modal */}
@@ -304,6 +477,14 @@ const TetrisComponent = () => {
         <ProjectModal 
           project={selectedProject} 
           onClose={() => setSelectedProject(null)} 
+        />
+      )}
+
+      {/* Ajouter la modal des compétences */}
+      {selectedSkill && (
+        <SkillModal 
+          skill={selectedSkill} 
+          onClose={() => setSelectedSkill(null)} 
         />
       )}
     </div>
