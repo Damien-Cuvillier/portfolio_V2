@@ -3,9 +3,9 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import emailjs from 'emailjs-com';
 
-const EMAILJS_TOKEN = process.env.EMAILJS_TOKEN;
-const SERVICEID= process.env.SERVICEID;
-const TEMPLATEID= process.env.TEMPLATEID;
+const EMAILJS_TOKEN = process.env.REACT_APP_EMAILJS_TOKEN;
+const SERVICEID= process.env.REACT_APP_SERVICEID;
+const TEMPLATEID= process.env.REACT_APP_TEMPLATEID;
 
 const ContactForm = () => {
   const validationSchema = Yup.object({
