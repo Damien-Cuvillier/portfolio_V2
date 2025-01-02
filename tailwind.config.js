@@ -9,6 +9,9 @@ module.exports = {
         'custom-red': '#f7b733',
         'custom-black' : '#282c34',
       },
+      screens: {
+        'custom': '750px',
+      },
     },
   },
   variants: {

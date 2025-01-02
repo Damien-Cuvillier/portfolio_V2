@@ -60,3 +60,29 @@
       transform: rotate(360deg);
     }
   }
+
+/* Styles pour le menu mobile */
+@media screen and (max-width: 768px) {
+  /* Empêcher le défilement du body quand le menu est ouvert */
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  /* Overlay sombre quand le menu est ouvert */
+  .menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  .menu-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+}

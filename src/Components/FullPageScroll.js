@@ -26,7 +26,7 @@ const FullPageScroll = ({ children, currentPage: externalCurrentPage, onPageChan
     if (typeof externalCurrentPage === 'number' && externalCurrentPage !== currentPage) {
       setCurrentPage(externalCurrentPage);
     }
-  }, [externalCurrentPage]);
+  }, [externalCurrentPage, currentPage]);
 
   // Gestionnaire pour la navigation depuis le header
   useEffect(() => {

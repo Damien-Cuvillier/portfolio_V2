@@ -4,7 +4,7 @@ import { Canvas } from '@react-three/fiber';
 import { useTransition, a } from '@react-spring/three';
 import flatten from 'lodash-es/flatten';
 import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader';
-import '../styles/About.css';
+import '../styles/Intro.css';
 import { ShapeGeometry } from 'three';
 import { extend } from '@react-three/fiber';
 import { useSpring } from 'react-spring';
