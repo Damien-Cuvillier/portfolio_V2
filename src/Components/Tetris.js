@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import '../App.css';
 import '../styles/tetrisModal.css'
 import Competences from './Competences';
-import Footer from './Footer';
+import ContactForm from './ContactForm';
 // Données des projets
 const projects = [
   {
@@ -95,7 +95,6 @@ const skills = [
   },
   {
     id: 2,
-    title: 'Formulaire de contact',
     description: [
       'Formulaire de contact',
       'Envoyez-moi un message'
@@ -105,94 +104,32 @@ const skills = [
   }
 ];
 
-const TetrisComponent = () => {
+const TetrisComponent = ({ 
+  unlockedProjects, 
+  setUnlockedProjects, 
+  unlockedSkills, 
+  setUnlockedSkills 
+}) => {
   const [gameController, setGameController] = useState(null);
   const [gameState, setGameState] = useState(null);
-  const [unlockedProjects, setUnlockedProjects] = useState([]);
   const [previousLinesCleared, setPreviousLinesCleared] = useState(0);
   const [currentLinesCleared, setCurrentLinesCleared] = useState(0);
+  const [highScore, setHighScore] = useState(() => {
+    const saved = localStorage.getItem('tetrisHighScore');
+    return saved ? parseInt(saved) : 0;
+  });
   const [selectedProject, setSelectedProject] = useState(null);
-  const [unlockedSkills, setUnlockedSkills] = useState([]);
   const [selectedSkill, setSelectedSkill] = useState(null);
 
-  // Ajouter un useEffect pour gérer le focus
+  // Mettre à jour le meilleur score quand currentLinesCleared change
   useEffect(() => {
-    // Sélectionner tous les boutons qui pourraient avoir le focus
-    const buttons = document.querySelectorAll('button');
-    // Retirer le focus de tous les boutons
-    buttons.forEach(button => button.blur());
-    
-    // Optionnel : focus sur le conteneur du jeu pour s'assurer que les contrôles fonctionnent
-    const gameContainer = document.querySelector('.tetris-container');
-    if (gameContainer) {
-      gameContainer.focus();
+    if (currentLinesCleared > highScore) {
+      setHighScore(currentLinesCleared);
+      localStorage.setItem('tetrisHighScore', currentLinesCleared.toString());
     }
-  }, []); // S'exécute une seule fois au montage du composant
+  }, [currentLinesCleared, highScore]);
 
-  // Déplacer les composants à l'intérieur de TetrisComponent
-  const SkillThumbnail = ({ skill }) => (
-    <div 
-      className={`skill-thumbnail ${unlockedSkills.includes(skill.id) ? 'unlocked hover:cursor-pointer' : 'locked'}`}
-      onClick={() => unlockedSkills.includes(skill.id) && setSelectedSkill(skill)}
-    >
-      <div className="relative group w-full h-[150px]">
-        <img 
-          src={skill.imageUrl} 
-          alt={skill.title}
-          className={`w-full h-full object-contain rounded-lg transition-all duration-300 hover:transform hover:scale-105
-            ${unlockedSkills.includes(skill.id) ? 'filter-none hover:brightness-110' : 'grayscale filter blur-sm'}`}
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          {!unlockedSkills.includes(skill.id) && (
-            <FontAwesomeIcon icon={faLock} className="text-white text-2xl" />
-          )}
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-center rounded-b-lg">
-          <p className="text-sm">{skill.title}</p>
-          <p className="text-xs">{unlockedSkills.includes(skill.id) ? 'Débloqué' : `${skill.lines} lignes requises`}</p>
-        </div>
-      </div>
-    </div>
-  );
-
-  const SkillModal = ({ skill, onClose }) => {
-    if (!skill) return null;
-
-    const handleClose = () => {
-      onClose();
-      if (gameController) {
-        gameController.resume();
-      }
-    };
-
-    return (
-      <div 
-        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <div 
-          className="bg-white rounded-lg max-w-[calc(4xl+150px)] w-[calc(70%+50px)] mx-4 relative "
-          onClick={(e) => e.stopPropagation()}
-        >
-          <button 
-            onClick={handleClose}
-            className="absolute top-16 right-4 text-gray-700 hover:text-gray-800 transition-colors text-xl"
-          >
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-          <div className="flex justify-between items-start mb-4">
-            <h3 className="text-2xl font-bold text-gray-800">{skill.title}</h3>
-          </div>
-          {skill.id === 1 ? (
-            <Competences />
-          ) : (
-            <Footer showOnlyForm={true} />
-          )}
-        </div>
-      </div>
-    );
-  };
-
+  // Gestion du déblocage des projets et compétences
   useEffect(() => {
     if (gameState && currentLinesCleared > previousLinesCleared) {
       // Filtrer uniquement les nouveaux projets débloqués
@@ -236,13 +173,129 @@ const TetrisComponent = () => {
   
       setPreviousLinesCleared(currentLinesCleared);
     }
-  }, [currentLinesCleared, gameState, unlockedProjects, unlockedSkills, previousLinesCleared]);
+  }, [currentLinesCleared, gameState, unlockedProjects, unlockedSkills, previousLinesCleared, setUnlockedProjects, setUnlockedSkills]);
+
+  // Gestion de la pause pour les modales
   useEffect(() => {
     if (selectedProject && gameController) {
       gameController.pause();
     }
   }, [selectedProject, gameController]);
-  
+
+  useEffect(() => {
+    if (selectedSkill && gameController) {
+      gameController.pause();
+    }
+  }, [selectedSkill, gameController]);
+// Gestionnaire pour réinitialiser le jeu
+const handleRestart = () => {
+  if (gameController) {
+    // Sauvegarder le score actuel si c'est un meilleur score
+    const highScore = parseInt(localStorage.getItem('tetrisHighScore') || '0');
+    if (currentLinesCleared > highScore) {
+      localStorage.setItem('tetrisHighScore', currentLinesCleared.toString());
+    }
+
+    gameController.restart();
+    document.activeElement.blur();
+    const gameContainer = document.querySelector('.tetris-container');
+    if (gameContainer) {
+      gameContainer.focus();
+    }
+  }
+};
+  // Gestion du Game Over
+  useEffect(() => {
+    if (gameState === 'LOST') {
+      Swal.fire({
+        title: 'Game Over!',
+        text: `Score final : ${currentLinesCleared} lignes`,
+        icon: 'error',
+        confirmButtonText: 'Rejouer',
+        showCancelButton: true,
+        cancelButtonText: 'Fermer',
+      }).then((result) => {
+        if (result.isConfirmed && gameController) {
+          gameController.restart();
+          document.activeElement.blur();
+          const gameContainer = document.querySelector('.tetris-container');
+          if (gameContainer) {
+            gameContainer.focus();
+          }
+        }
+      });
+    }
+  }, [gameState, currentLinesCleared, gameController]);
+
+  // Déplacer les composants à l'intérieur de TetrisComponent
+  const SkillThumbnail = ({ skill }) => (
+    <div 
+      className={`skill-thumbnail ${unlockedSkills.includes(skill.id) ? 'unlocked hover:cursor-pointer' : 'locked'}`}
+      onClick={() => unlockedSkills.includes(skill.id) && setSelectedSkill(skill)}
+    >
+      <div className="relative group w-full h-[150px]">
+        <img 
+          src={skill.imageUrl} 
+          alt={skill.title}
+          className={`w-full h-full object-contain rounded-lg transition-all duration-300 hover:transform hover:scale-105
+            ${unlockedSkills.includes(skill.id) ? 'filter-none hover:brightness-110' : 'grayscale filter blur-sm'}`}
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          {!unlockedSkills.includes(skill.id) && (
+            <FontAwesomeIcon icon={faLock} className="text-white text-2xl" />
+          )}
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 text-center rounded-b-lg">
+          <p className="text-xs">{unlockedSkills.includes(skill.id) ? 'Débloqué' : `${skill.lines} lignes requises`}</p>
+        </div>
+      </div>
+    </div>
+  );
+
+  const SkillModal = ({ skill, onClose }) => {
+    if (!skill) return null;
+
+    const handleClose = () => {
+      onClose();
+      if (gameController) {
+        gameController.resume();
+      }
+    };
+
+    return (
+      <div 
+        className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+        onKeyDown={(e) => e.stopPropagation()}
+      >
+        <div 
+          className={`bg-white rounded-lg relative mx-4 ${
+            skill.id === 1 
+              ? 'max-w-[calc(4xl+150px)] w-[calc(70%+50px)]' // Style pour la modale des compétences
+              : 'max-w-xl w-full' // Style plus compact pour le formulaire de contact
+          }`}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button 
+            onClick={handleClose}
+            className={`absolute top-4 right-4 text-gray-700 hover:text-gray-800 transition-colors text-xl ${
+              skill.id === 1 ? 'top-16' : 'top-4' // Ajustement de la position du bouton de fermeture
+            }`}
+          >
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+          
+          {skill.id === 1 ? (
+            <Competences />
+          ) : (
+            <div > {/* Ajout de padding pour le formulaire */}
+              <ContactForm showOnlyForm={true} />
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
   // Modal Component
 const ProjectModal = ({ project, onClose }) => {
   if (!project) return null;
@@ -260,42 +313,43 @@ const ProjectModal = ({ project, onClose }) => {
       onKeyDown={(e) => e.stopPropagation()}
     >
       <div 
-        className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4"
+        className="bg-white rounded-lg p-6 max-w-4xl w-full mx-4 relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex justify-between items-start mb-4">
-          <h3 className="text-2xl font-bold text-gray-800">{project.title}</h3>
-          <button 
-            onClick={handleClose} 
-            className="text-gray-500 hover:text-gray-700 transition-colors"
-          >
-            <FontAwesomeIcon icon={faTimes} className="text-xl" />
-          </button>
-        </div>
-        <div className="modal-image-container mb-4">
-          <img 
-            src={project.imageUrl} 
-            alt={project.title}
-            className="w-full rounded-lg object-contain max-h-[60vh]"
-          />
-        </div>
-        <div className="space-y-4">
-          {project.description.map((paragraph, index) => (
-            <p key={index} className="text-gray-600">{paragraph}</p>
-          ))}
-        </div>
-        {project.projectURL && (
-          <div className="mt-6">
-            <a
-              href={project.projectURL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block relative bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors "
-            >
-              Voir sur GitHub
-            </a>
+        <button 
+          onClick={handleClose} 
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors"
+          aria-label="Fermer"
+        >
+          <FontAwesomeIcon icon={faTimes} className="text-xl" />
+        </button>
+        
+        <div className="mt-2">
+          <div className="modal-image-container my-4">
+            <img 
+              src={project.imageUrl} 
+              alt={project.title}
+              className="w-full rounded-lg object-contain max-h-[60vh]"
+            />
           </div>
-        )}
+          <div className="space-y-4">
+            {project.description.map((paragraph, index) => (
+              <p key={index} className="text-gray-600">{paragraph}</p>
+            ))}
+          </div>
+          {project.projectURL && (
+            <div className="mt-6">
+              <a
+                href={project.projectURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block relative bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Voir sur GitHub
+              </a>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -357,7 +411,7 @@ const ProjectModal = ({ project, onClose }) => {
         className="tetris-container bg-white rounded-lg shadow-lg p-6 focus:outline-none" 
         tabIndex="-1"
       >
-        <h2 className='text-2xl font-bold text-gray-800 mb-4 text-center'>
+        <h2 className='text-4xl font-bold text-gray-800 mb-4 text-center mr-20'>
           <FontAwesomeIcon icon={faGamepad} /> Tetris <FontAwesomeIcon icon={faGamepad} />
         </h2>
         <Tetris
@@ -387,22 +441,9 @@ const ProjectModal = ({ project, onClose }) => {
             if (gameState !== state) setGameState(state);
             if (currentLinesCleared !== linesCleared) setCurrentLinesCleared(linesCleared);
 
-            const handleRestart = () => {
-              if (gameController) {
-                gameController.restart();
-                // Retirer le focus du bouton après le redémarrage
-                document.activeElement.blur();
-                // Redonner le focus au conteneur du jeu
-                const gameContainer = document.querySelector('.tetris-container');
-                if (gameContainer) {
-                  gameContainer.focus();
-                }
-              }
-            };
-
             return (
               <div className="tetris-game">
-                <div className="points">
+                <div className="points text-xl">
                   <div>
                     <p>Points</p>
                     <p>{points}</p>
@@ -410,6 +451,10 @@ const ProjectModal = ({ project, onClose }) => {
                   <div>
                     <p>Lignes</p>
                     <p>{linesCleared}</p>
+                  </div>
+                  <div>
+                    <p>Top Score</p>
+                    <p>{highScore}</p>
                   </div>
                 </div>
                 <div className="held-piece-container">

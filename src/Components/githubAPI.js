@@ -6,7 +6,7 @@ export const fetchRepoLanguages = async (repoUrl) => {
       throw new Error("GitHub token is missing! Please check your .env file.");
     }
 
-    // Vérifier si le token est expiré avant de faire la requête
+    // Vérifi si token est expiré avant de faire la requête
     const verificationResponse = await fetch('https://api.github.com/user', {
       headers: {
         'Authorization': `Bearer ${GITHUB_TOKEN}`,

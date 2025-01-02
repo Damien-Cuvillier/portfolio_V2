@@ -5,10 +5,15 @@ import '../styles/sparkle.css';
 
 function Header({ interactiveMode, setInteractiveMode, currentPage }) {
   const [isProjectVisible, setIsProjectVisible] = useState(false);
+  const [activeSection, setActiveSection] = useState(0);
 
   useEffect(() => {
     const handleSectionChange = (event) => {
       setIsProjectVisible(event.detail.isProjectSection);
+      // Mettre à jour la section active quand l'événement sectionChange est déclenché
+      if (typeof event.detail.page === 'number') {
+        setActiveSection(event.detail.page);
+      }
     };
 
     window.addEventListener('sectionChange', handleSectionChange);
@@ -19,13 +24,23 @@ function Header({ interactiveMode, setInteractiveMode, currentPage }) {
 
   useEffect(() => {
     setIsProjectVisible(currentPage === 3);
+    setActiveSection(currentPage);
   }, [currentPage]);
 
   const handleNavigation = (pageIndex, e) => {
     e.preventDefault();
+    setActiveSection(pageIndex);
     window.dispatchEvent(new CustomEvent('headerNavigation', {
       detail: { page: pageIndex }
     }));
+  };
+
+  // Fonction pour obtenir les classes du bouton de navigation
+  const getNavButtonClasses = (pageIndex) => {
+    const baseClasses = "font-bold text-slate-700 hover:text-slate-900 py-2 rounded-lg whitespace-nowrap relative";
+    const activeClasses = "after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-gray-800";
+    
+    return `${baseClasses} ${activeSection === pageIndex ? activeClasses : ''}`;
   };
 
   return (
@@ -42,25 +57,25 @@ function Header({ interactiveMode, setInteractiveMode, currentPage }) {
           <div className="flex items-center gap-6">
             <button 
               onClick={(e) => handleNavigation(1, e)}
-              className="font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-lg whitespace-nowrap"
+              className={getNavButtonClasses(1)}
             >
               A propos
             </button>
             <button 
               onClick={(e) => handleNavigation(2, e)}
-              className="font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-lg whitespace-nowrap"
+              className={getNavButtonClasses(2)}
             >
               Compétences
             </button>
             <button 
               onClick={(e) => handleNavigation(3, e)}
-              className="font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-lg whitespace-nowrap"
+              className={getNavButtonClasses(3)}
             >
               Projets
             </button>
             <button 
               onClick={(e) => handleNavigation(4, e)}
-              className="font-bold text-slate-700 hover:bg-slate-100 hover:text-slate-900 px-3 py-2 rounded-lg whitespace-nowrap"
+              className={getNavButtonClasses(4)}
             >
               Contacts
             </button>

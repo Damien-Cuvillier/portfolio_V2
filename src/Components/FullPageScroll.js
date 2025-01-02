@@ -1,29 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactPageScroller from 'react-page-scroller';
 
-const FullPageScroll = ({ children }) => {
+const FullPageScroll = ({ children, currentPage: externalCurrentPage, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(0);
 
   const handlePageChange = number => {
-  setCurrentPage(number);
-  window.dispatchEvent(new CustomEvent('sectionChange', { 
-    detail: { 
-      currentPage: number,
-      isProjectSection: number === 3 || number === 4 // Modifié pour inclure la section Contact
+    setCurrentPage(number);
+    // Mettre à jour la page actuelle dans le parent
+    if (onPageChange) {
+      onPageChange(number);
     }
-  }));
-};
-
-  // Gestionnaire pour la navigation depuis le header
-  const handleHeaderNavigation = (pageNumber) => {
-    setCurrentPage(pageNumber);
+    
+    // Déclencher l'événement sectionChange avec toutes les informations nécessaires
+    window.dispatchEvent(new CustomEvent('sectionChange', { 
+      detail: { 
+        currentPage: number,
+        page: number, // Ajout de 'page' pour la compatibilité avec le header
+        isProjectSection: number === 3 || number === 4
+      }
+    }));
   };
 
-  // Écouter l'événement de navigation du header
-  React.useEffect(() => {
+  // Synchroniser avec la page externe si elle change
+  useEffect(() => {
+    if (typeof externalCurrentPage === 'number' && externalCurrentPage !== currentPage) {
+      setCurrentPage(externalCurrentPage);
+    }
+  }, [externalCurrentPage]);
+
+  // Gestionnaire pour la navigation depuis le header
+  useEffect(() => {
     const headerNavHandler = (e) => {
       if (e.detail && typeof e.detail.page === 'number') {
-        handleHeaderNavigation(e.detail.page);
+        setCurrentPage(e.detail.page);
       }
     };
 

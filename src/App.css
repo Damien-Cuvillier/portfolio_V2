@@ -14,15 +14,12 @@
   text-align: center;
 }
 
-.tetris-container h1 {
-  margin-bottom: 1rem;
-}
-
 .game-info {
   margin-bottom: 1rem;
 }
 .game-board{
   border-spacing: 0;
+  width: 40%;
 }
 .tetris-game {
   display: flex;
@@ -30,7 +27,7 @@
   justify-content: center;
   margin: auto;
   padding-top: 100px;
-  padding-left: 150px;
+  padding-left: 100px;
 }
 
 .held-piece-container, .piece-queue-container {
@@ -132,7 +129,7 @@
   top:150px;
   display:flex;
   justify-content: space-between;
-  width: 600px;
+  width: 650px;
   padding-right: 170px;
 }
 .points > div {
@@ -142,7 +139,7 @@
 .points p {
   margin: 0;
   font-family: monospace;
-  font-size: 24px;
+  
 }
 
 .controls{
@@ -221,7 +218,7 @@ display: block;
 top: 48%;
 left: 50%;
 transform: translateX(-50%);
-width: 800px;
+width: 761px;
 position: absolute;
 height: 4px;
 margin:auto;
