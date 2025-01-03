@@ -124,7 +124,7 @@ function Header({ interactiveMode, setInteractiveMode, currentPage }) {
           </nav>
 
           <div className="mt-auto p-4 border-t">
-            <div className="flex justify-center space-x-6 mb-4">
+            <div className="flex justify-center space-x-20 ">
               <a href="https://www.linkedin.com/in/damien-cuvillier-46b6691b1/" 
                  className="text-slate-700 hover:text-slate-900"
                  target="_blank"

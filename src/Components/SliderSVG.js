@@ -12,11 +12,25 @@ import { useSpring } from 'react-spring';
 const svgNames = ['city', 'woods', 'beach','morning'];
 const svgUrls = svgNames.map(name => process.env.PUBLIC_URL + `/images/svg/${name}.svg`);
 
-const svgDimensions = { 
-  city: [5, 5, 5], 
-  morning: [2.5, 2.5, 2.5], 
-  woods: [1.2, 1.2, 1.2], 
-  beach: [4.5, 4.5, 4.5], 
+const svgDimensions = {
+  desktop: {
+    city: [5, 5, 5], 
+    woods: [1.2, 1.2, 1.2],
+    beach: [4.5, 4.5, 4.5],
+    morning: [2.5, 2.5, 2.5], 
+  },
+  tablet: {
+    city: [4, 4, 4],
+    woods: [0.9, 0.9, 0.9],
+    beach: [3.5, 3.5, 3.5],
+    morning: [2.2, 2.2, 2.2],
+  },
+  mobile: {
+    city: [3.2, 3.2, 3.2],
+    woods: [0.8, 0.8, 0.8],
+    beach: [3, 3, 3],
+    morning: [1.8, 1.8, 1.8],
+  }
 };
 
 extend({ ShapeGeometry });
@@ -61,9 +75,12 @@ const loadSVG = (svgUrl) => {
 };
 
 let lastFrameTime = performance.now();
+
 function Scene() {
   const [shapes, setShapes] = useState([]);
   const [currentSVG, setCurrentSVG] = useState(0);
+  const [screenSize, setScreenSize] = useState('desktop');
+
   const colors = ['#f1cff7', '#96b4df', '#96dfab', '#ffc897'];
 
   const handleSVGChange = useCallback(async () => {
@@ -75,6 +92,23 @@ function Scene() {
       console.error('Error loading SVG:', error);
     }
   }, [currentSVG]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth <= 480) {
+        setScreenSize('mobile');
+      } else if (window.innerWidth <= 768) {
+        setScreenSize('tablet');
+      } else {
+        setScreenSize('desktop');
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Vérification initiale
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     handleSVGChange();
@@ -106,17 +140,38 @@ function Scene() {
     from: ({ shape }) => ({
       position: [500, 500, 200],
       opacity: 0,
-      scale: svgDimensions[svgNames[currentSVG]] || [2, 2, 2]
+      scale: svgDimensions[screenSize][svgNames[currentSVG]] || [2, 2, 2]
     }),
-    enter: ({ shape }) => ({
-      position: [-100, 0, 0],
+    enter: ({ shape }) => {
+      // Ajustement de la position en fonction de la taille d'écran
+      let xPosition = -100; // Position par défaut
+      if (window.innerWidth <= 1440) xPosition = -800;
+      if (window.innerWidth <= 1024) xPosition = -1000;
+      if (window.innerWidth <= 768) xPosition = -900;
+      if (window.innerWidth <= 480) xPosition = -700;
+       // Ajustement spécifique pour 'woods'
+      if (svgNames[currentSVG] === 'woods') {
+      xPosition += 300; // Décalage vers la droite de 200 unités
+      }
+      if (svgNames[currentSVG] === 'morning') {
+        xPosition -= 200; // Décalage vers la droite de 200 unités
+        }
+      // Position verticale
+      let yPosition = 0;
+      if (window.innerWidth <= 1440) yPosition = 600;
+      if (window.innerWidth <= 1024) yPosition = 500;
+      if (window.innerWidth <= 768) yPosition = 900;
+      if (window.innerWidth <= 480) yPosition = 1000;
+    return {
+      position: [xPosition, yPosition, 0],
       opacity: 1,
-      scale: svgDimensions[svgNames[currentSVG]] || [2, 2, 2]
-    }),
+      scale: svgDimensions[screenSize][svgNames[currentSVG]] || [2, 2, 2]
+    };
+  },
     leave: ({ shape }) => ({
       position: [1000, -500, 10],
       opacity: 0,
-      scale: svgDimensions[svgNames[currentSVG]] || [2, 2, 2]
+      scale: svgDimensions[screenSize][svgNames[currentSVG]] || [2, 2, 2]
     }),
     keys: item => item.shape.uuid,
     trail: 5,
@@ -142,7 +197,7 @@ function Scene() {
 
 function About() {
   return (
-    <div className="about w-full h-full">
+    <div className="home w-full h-full">
       <Canvas
         camera={{
           fov: 80,
@@ -150,7 +205,13 @@ function About() {
           rotation: [0, THREE.MathUtils.degToRad(-20), THREE.MathUtils.degToRad(180)],
           far: 20000,
         }}
-        style={{ display:'block', height:'955px', width:'100%', margin:'auto' }}
+        style={{ 
+    display: 'block', 
+    height: '955px', 
+    width: '100%', 
+    margin: 'auto',
+    maxHeight: '100vh' // Ajout pour garantir que le canvas ne dépasse pas la hauteur de la fenêtre
+  }}
       >
         <ambientLight intensity={1} />
         <directionalLight
@@ -180,11 +241,19 @@ function About() {
         />
         <Scene />
       </Canvas>
-      <p className="header-about">
-        <span className="name text-6xl font-bold text-gray-800">Damien Cuvillier</span><br/>
-        <span className="role text-3xl font-bold text-gray-800 mb-4">Développeur web</span><br/>
-        <span className="description text-xl text-gray-700 mt-4">Ensemble, réalisons des projets innovants.<br/> À distance ou sur site, je suis prêt à relever de nouveaux défis.</span>
-      </p>
+      <p className="header-home">
+  <span className="name-container">
+    <span className="firstname text-6xl font-bold text-gray-800 pr-4">Damien</span>
+    <span className="lastname text-6xl font-bold text-gray-800">Cuvillier</span>
+  </span>
+  <br/>
+  <span className="role text-3xl font-bold text-gray-800 mb-4">Développeur web</span>
+  <br/>
+  <span className="intro text-xl text-gray-700 mt-4">
+    Ensemble, réalisons des projets innovants.<br/> 
+    À distance ou sur site, je suis prêt à relever de nouveaux défis.
+  </span>
+</p>
     </div>
   );
 }
