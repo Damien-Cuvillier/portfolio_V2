@@ -36,7 +36,7 @@ const LangageGithub = ({ data = [] }) => {
       },
       y: {
         barThickness: 1, // Ajuste l'épaisseur des barres
-        maxBarThickness: 2, // Assure que l'épaisseur des barres ne dépasse pas 8px
+        maxBarThickness: 1, // Assure que l'épaisseur des barres ne dépasse pas 8px
         categoryPercentage: 0.1, // Ajuste l'épaisseur des barres
         barPercentage: 0.5, // Ajuste l'épaisseur des barres
         ticks: {
@@ -83,7 +83,7 @@ const LangageGithub = ({ data = [] }) => {
   };
 
   return (
-    <div className="w-full flex justify-center mt-4 p-4">
+    <div className="w-full flex justify-center ">
       <Bar data={chartData} options={options} style={{ backgroundColor: 'transparent' }} />
     </div>
   );

@@ -39,7 +39,7 @@ const ContactForm = ({ showOnlyForm = false }) => {
 
   return (
     <>
-      <div className={`contact-form-section ${showOnlyForm ? '' : 'min-h-screen'}`}>
+      <div className={`contact-form-section ${showOnlyForm ? '' : 'min-h-screen'} mt-12`}>
         <Formik
           initialValues={{ name: '', email: '', message: '' }}
           validationSchema={validationSchema}

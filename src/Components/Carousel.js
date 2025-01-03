@@ -123,10 +123,10 @@ const ProjectsCarousel = () => {
         ))}
       </Carousel>
       {repos[currentSlide] && (
-        <div className={`legend flex flex-col ${repos[currentSlide].projectURL ? "md:flex-row" : "justify-center"} items-center bg-gray-100 p-4 rounded-md shadow-md mt-4 h-auto w-full max-w-3xl mx-auto h-1/2 pb-24`}>
+        <div className={`legend flex flex-col ${repos[currentSlide].projectURL ? "md:flex-row" : "justify-center"} items-start bg-gray-100 p-4 rounded-md shadow-md w-full max-w-3xl mx-auto overflow-y-auto`}>
           {repos[currentSlide].projectURL && (
-            <div className="w-full md:w-1/2">
-              <a className="my-2 py-2 text-sm text-gray-800 font-bold hover:underline relative" href={repos[currentSlide].projectURL} target="_blank" rel="noopener noreferrer">
+            <div className="graphGithub w-full md:w-1/2">
+              <a className="mt-2 py-2 text-sm text-gray-800 font-bold hover:underline relative" href={repos[currentSlide].projectURL} target="_blank" rel="noopener noreferrer">
                 GitHub <FontAwesomeIcon icon={faGithub} />
               </a>
               {repos[currentSlide].languageData.length > 0 && (
@@ -134,11 +134,11 @@ const ProjectsCarousel = () => {
               )}
             </div>
           )}
-          <div className={`w-full ${repos[currentSlide].projectURL ? "md:w-1/2 mt-4 md:mt-0 md:ml-4" : "text-center"}`}>
+          <div className={`w-full ${repos[currentSlide].projectURL ? "md:w-1/2 md:mt-0 md:ml-4" : "text-center"}`}>
             <h3 className="text-xl font-bold text-gray-800 mb-2">{repos[currentSlide].title}</h3>
             
             {repos[currentSlide].description && (
-              <ul className="list-disc list-inside text-gray-600 text-sm">
+              <ul className="description list-disc list-inside text-gray-600 text-sm">
                 {repos[currentSlide].description.map((desc, descIndex) => (
                   <li key={descIndex}>{desc}</li>
                 ))}

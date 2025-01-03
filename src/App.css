@@ -171,9 +171,10 @@
 }
 
 .legend {
- 
-  
-  height: 350px;
+  height: auto; /* Remplace la hauteur fixe par auto */
+  min-height: 350px; /* Hauteur minimum */
+  max-height: 450px; /* Hauteur maximum */
+  overflow-y: auto; /* Permet le défilement si le contenu est trop long */
 }
 
 .carousel .legend h3 {
@@ -282,3 +283,40 @@
 }
 
 
+/* Ajustements responsifs */
+@media (max-width: 1629px) {
+  
+
+  /* Réduire la taille du texte */
+  .legend h3 {
+    font-size: 1rem;
+  }
+
+  .legend ul {
+    font-size: 0.875rem;
+  }
+}
+
+@media (768px <= width <= 1700px)  {
+  .carousel .slide img {
+    height: 420px; /* Réduire la hauteur de l'image */
+  }
+}
+
+@media (360px <= width <= 767px) {
+  .carousel .slide img {
+    height: 300px; /* Réduire la hauteur de l'image */
+    width: 100%;
+  }
+  .carousel .control-dots{
+    margin-top: 0px;
+  }
+  .graphGithub{
+    height: 160px;
+    width: 100%;
+    order:2;
+  }
+  .description{
+    font-size: 8px;
+  }
+}
