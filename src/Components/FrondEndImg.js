@@ -1,12 +1,15 @@
 import * as React from "react";
+import "../App.css";
 
 const SvgIcon = (props) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="476"
-    height="465"
+    width="100%" // Changement ici
+    height="100%" // Changement ici
+    viewBox="0 0 476 465" // Garde le viewBox original
+    preserveAspectRatio="xMidYMid meet" // Ajout pour garantir les proportions
+    className="svgFront w-[270px] lg:w-[476px] lg:h-[465px]"
     fill="none"
-    viewBox="0 0 476 465"
   >
     <circle cx="238" cy="283" r="32" fill="#000"></circle>
     <circle

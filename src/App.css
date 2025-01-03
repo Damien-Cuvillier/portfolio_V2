@@ -209,20 +209,21 @@
 .control-dots{
   opacity: 1.5;
 }
-.flux{
-font-size: 125%;
-box-sizing: border-box;
-word-wrap: break-word;
-transition: box-shadow .2s;
-display: block;
-top: 48%;
-left: 50%;
-transform: translateX(-50%);
-width: 761px;
-position: absolute;
-height: 4px;
-margin:auto;
+.flux {
+  font-size: 125%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  transition: box-shadow .2s;
+  display: block;
+  top: 49%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--path-width, 761px); /* Utilise la largeur calculée */
+  position: absolute;
+  height: 4px;
+  margin: auto;
 }
+
 .flux::before {
   content: '';
   position: absolute;
@@ -245,22 +246,39 @@ margin:auto;
 
 @keyframes moveAtom {
   0% {
-    left: 0; /* Commence à gauche */
+    left: 0;
   }
   50% {
-    left: 100%; /* Déplace l'atome à droite */
-    transform: translateX(-100%) translateY(-50%);
+    left: calc(100% - 25px); /* Soustrait la largeur de l'atome */
   }
   100% {
-    left: 0; /* Retourne à gauche */
+    left: 0;
+  }
+}
+@media (800px <= width <= 1024px)  {
+  .flux {
+    top:59%;
+  }
+  .svgBack, .svgFront{
+    width: 400px;
+  }
+}
+@media (640px <= width <= 800px)  {
+  .svgFront, .svgBack{
+    width: 270px;
+  }
+  
+}
+@media (max-width: 800px) {
+  .competence-item {
+    flex-direction: column;
+    align-items: center;
+   
+  }
+  
+  .flux {
+    display: none; /* Cache l'animation sur mobile */
   }
 }
 
 
-@media screen and (max-width: 1024px) {
-
-}
-
-@media screen and (max-width: 768px) {
-
-}
