@@ -6,37 +6,38 @@ export const fetchRepoLanguages = async (repoUrl) => {
       throw new Error("GitHub token is missing! Please check your .env file.");
     }
 
-    // Vérifi si token est expiré avant de faire la requête
+    // Vérification du token
     const verificationResponse = await fetch('https://api.github.com/user', {
       headers: {
-        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Authorization': `token ${GITHUB_TOKEN}`, // Changé de 'Bearer' à 'token'
         'Accept': 'application/vnd.github.v3+json',
         'X-GitHub-Api-Version': '2022-11-28'
       }
     });
 
-    if (verificationResponse.status === 401) {
+    if (!verificationResponse.ok) {
       throw new Error("GitHub token is invalid or expired");
     }
 
+    // Requête pour les langages
     const response = await fetch(repoUrl, {
       headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`, // Changé de 'Bearer' à 'token'
         'Accept': 'application/vnd.github.v3+json',
-        'Authorization': `Bearer ${GITHUB_TOKEN}`,
         'X-GitHub-Api-Version': '2022-11-28'
       },
-      cache: 'no-store' // Désactive le cache pour toujours obtenir des données fraîches
+      cache: 'no-store'
     });
 
     if (!response.ok) {
-      throw new Error(`GitHub API request failed: ${response.status}`);
+      const errorData = await response.json();
+      throw new Error(`GitHub API request failed: ${errorData.message || response.status}`);
     }
 
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error:', error.message);
-    // Retourner un objet avec une propriété error pour mieux gérer l'erreur dans le composant
+    console.error('Error fetching GitHub data:', error.message);
     return { error: error.message };
   }
 };
