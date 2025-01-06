@@ -3,7 +3,6 @@ import Tetris from 'react-tetris';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowUp, faArrowRight, faArrowLeft, faArrowDown, faGamepad, faLock, faTimes } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-import '../App.css';
 import '../styles/tetrisModal.css'
 import Competences from './Competences';
 import ContactForm from './ContactForm';
@@ -155,7 +154,7 @@ const TetrisComponent = ({
           title: 'Projet débloqué !',
           text: `Vous avez débloqué ${newUnlockedProjects.length} nouveau(x) projet(s) !`,
           icon: 'success',
-          timer: 2000,
+          timer: 1500,
           showConfirmButton: false
         });
       }
@@ -166,7 +165,7 @@ const TetrisComponent = ({
           title: 'Compétences débloquées !',
           text: `Vous avez débloqué ${newUnlockedSkillIds.length} nouvelle(s) compétence(s) !`,
           icon: 'success',
-          timer: 2000,
+          timer: 1500,
           showConfirmButton: false
         });
       }
@@ -230,10 +229,10 @@ const handleRestart = () => {
   // Déplacer les composants à l'intérieur de TetrisComponent
   const SkillThumbnail = ({ skill }) => (
     <div 
-      className={`skill-thumbnail ${unlockedSkills.includes(skill.id) ? 'unlocked hover:cursor-pointer' : 'locked'}`}
+      className={`skill-thumbnail w-full ${unlockedSkills.includes(skill.id) ? 'unlocked hover:cursor-pointer' : 'locked'}`}
       onClick={() => unlockedSkills.includes(skill.id) && setSelectedSkill(skill)}
     >
-      <div className="relative group w-full h-[150px]">
+      <div className="relative group w-full h-[80px] xl:h-[100px]">
         <img 
           src={skill.imageUrl} 
           alt={skill.title}
@@ -356,12 +355,12 @@ const ProjectModal = ({ project, onClose }) => {
 };
 
   // Composant pour afficher un projet
-  const ProjectThumbnail = ({ project, isLeft }) => (
+  const ProjectThumbnail = ({ project }) => (
     <div 
-      className={`project-thumbnail ${unlockedProjects.includes(project.id) ? 'unlocked hover:cursor-pointer' : 'locked'}`}
+      className={`project-thumbnail w-full ${unlockedProjects.includes(project.id) ? 'unlocked hover:cursor-pointer' : 'locked'}`}
       onClick={() => unlockedProjects.includes(project.id) && setSelectedProject(project)}
     >
-      <div className="relative group w-full h-[150px]">
+      <div className="relative group w-full h-[80px] xl:h-[100px]">
         <img 
           src={project.imageUrl} 
           alt={project.title}
@@ -381,156 +380,269 @@ const ProjectModal = ({ project, onClose }) => {
     </div>
   );
 
+  // Ajoutez ces nouveaux composants pour les contrôles tactiles
+  const TouchControls = ({ controller }) => {
+    const handleTouchStart = (action) => (e) => {
+      e.preventDefault();
+      if (controller) {
+        switch (action) {
+          case 'LEFT':
+            controller.moveLeft();
+            break;
+          case 'RIGHT':
+            controller.moveRight();
+            break;
+          case 'DOWN':
+            controller.moveDown();
+            break;
+          case 'ROTATE':
+            controller.flipClockwise();
+            break;
+          case 'DROP':
+            controller.hardDrop();
+            break;
+          case 'HOLD':
+            controller.hold();
+            break;
+          default:
+            break;
+        }
+      }
+    };
+
+    return (
+      <div className="touch-controls">
+        <div className="direction-pad">
+          <button 
+            className="control-button up"
+            onTouchStart={handleTouchStart('ROTATE')}
+            onTouchMove={(e) => e.preventDefault()}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <FontAwesomeIcon icon={faArrowUp} />
+          </button>
+          <div className="horizontal-buttons">
+            <button 
+              className="control-button left"
+              onTouchStart={handleTouchStart('LEFT')}
+              onTouchMove={(e) => e.preventDefault()}
+              onTouchEnd={(e) => e.preventDefault()}
+            >
+              <FontAwesomeIcon icon={faArrowLeft} />
+            </button>
+            <button 
+              className="control-button right"
+              onTouchStart={handleTouchStart('RIGHT')}
+              onTouchMove={(e) => e.preventDefault()}
+              onTouchEnd={(e) => e.preventDefault()}
+            >
+              <FontAwesomeIcon icon={faArrowRight} />
+            </button>
+          </div>
+          <button 
+            className="control-button down"
+            onTouchStart={handleTouchStart('DOWN')}
+            onTouchMove={(e) => e.preventDefault()}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            <FontAwesomeIcon icon={faArrowDown} />
+          </button>
+        </div>
+
+        <div className="action-buttons">
+          <button 
+            className="control-button hold"
+            onTouchStart={handleTouchStart('HOLD')}
+            onTouchMove={(e) => e.preventDefault()}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            HOLD
+          </button>
+          <button 
+            className="control-button drop"
+            onTouchStart={handleTouchStart('DROP')}
+            onTouchMove={(e) => e.preventDefault()}
+            onTouchEnd={(e) => e.preventDefault()}
+          >
+            DROP
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="tetris-page-container flex justify-center items-start gap-8 p-4 mt-12">
-      {/* Colonne de gauche */}
-      <div className="left-column w-1/5 space-y-4">
-        <div className="about-section bg-white p-4 rounded-lg shadow">
+    <div className="tetris-page-container flex flex-col xl:flex-row justify-center items-start gap-8 p-4 mt-12">
+      {/* Container pour colonnes gauche et Tetris au-dessus de 1280px */}
+      <div className="flex flex-col xl:flex-row gap-8 w-full">
+        {/* Colonne de gauche - visible uniquement au-dessus de 1280px */}
+        <div className="left-column hidden xl:block w-1/5 space-y-4">
+          <div className="about-section bg-white p-4 rounded-lg shadow">
+            <h3 className="text-xl font-bold mb-2">À propos de moi</h3>
+            <p className="text-gray-600">
+              Débloquez mes projets en complétant des lignes au Tetris !
+            </p>
+          </div>
+          <div className="left-projects flex flex-col space-y-2">
+            {skills
+              .filter(skill => skill.id === 1)
+              .map(skill => (
+                <SkillThumbnail key={skill.id} skill={skill} />
+              ))}
+            {projects
+              .filter(project => ['Booki', 'Sophie Bluel', 'Nina Carducci'].includes(project.title))
+              .map(project => (
+                <ProjectThumbnail key={project.id} project={project} />
+              ))}
+          </div>
+        </div>
+
+        {/* Tetris au centre */}
+        <div className="tetris-container bg-white rounded-lg shadow-lg p-6 focus:outline-none xl:w-auto w-full mx-auto">
+          <h2 className='text-4xl font-bold text-gray-800 mb-4 text-center mr-20'>
+            <FontAwesomeIcon icon={faGamepad} /> Tetris <FontAwesomeIcon icon={faGamepad} />
+          </h2>
+          <Tetris
+            keyboardControls={{
+              down: 'MOVE_DOWN',
+              left: 'MOVE_LEFT',
+              right: 'MOVE_RIGHT',
+              space: 'HARD_DROP',
+              z: 'FLIP_COUNTERCLOCKWISE',
+              x: 'FLIP_CLOCKWISE',
+              up: 'FLIP_CLOCKWISE',
+              p: 'TOGGLE_PAUSE',
+              c: 'HOLD',
+              shift: 'HOLD',
+            }}
+          >
+            {({
+              HeldPiece,
+              Gameboard,
+              PieceQueue,
+              points,
+              linesCleared,
+              state,
+              controller,
+            }) => {
+              if (gameController !== controller) setGameController(controller);
+              if (gameState !== state) setGameState(state);
+              if (currentLinesCleared !== linesCleared) setCurrentLinesCleared(linesCleared);
+
+              return (
+                <div className="tetris-game">
+                  <div className="points text-xl">
+                    <div>
+                      <p>Points</p>
+                      <p>{points}</p>
+                    </div>
+                    <div>
+                      <p>Lignes</p>
+                      <p>{linesCleared}</p>
+                    </div>
+                    <div>
+                      <p>Top Score</p>
+                      <p>{highScore}</p>
+                    </div>
+                  </div>
+                  <div className="held-piece-container">
+                    <HeldPiece />
+                  </div>
+                  <Gameboard />
+                  <div className="piece-queue-container">
+                    <PieceQueue />
+                  </div>
+                  {/* Remplacez les contrôles clavier par les contrôles tactiles sur mobile */}
+                  {window.innerWidth <= 750 ? (
+                    <TouchControls controller={controller} />
+                  ) : (
+                    <div className="controls">
+                      <h3 className='font-bold text-gray-800 py-5'>Controls</h3>
+                      <div className="control-row">
+                        <FontAwesomeIcon icon={faArrowUp} /> Rotate
+                      </div>
+                      <div className="control-row">
+                        <FontAwesomeIcon icon={faArrowLeft} /> Left
+                      </div>
+                      <div className="control-row">
+                        <FontAwesomeIcon icon={faArrowRight} /> Right
+                      </div>
+                      <div className="control-row">
+                        <FontAwesomeIcon icon={faArrowDown} /> Soft Drop
+                      </div>
+                      <div className="control-row">
+                        ▬ Drop
+                      </div>
+                      <div>"C" hold</div>
+                      <div>"P" Pause</div>
+                    </div>
+                  )}
+                  <button
+                    onClick={handleRestart}
+                    className={`restart-button text-gray-800 font-bold mt-12 bg-blue-400 hover:bg-blue-600 text-white py-2 px-4 rounded ${
+                      selectedProject || selectedSkill ? 'hidden' : ''
+                    }`}
+                  >
+                    Rejouer
+                  </button>
+                </div>
+              );
+            }}
+          </Tetris>
+        </div>
+
+        {/* Colonne de droite - visible uniquement au-dessus de 1280px */}
+        <div className="right-column hidden xl:block w-1/5">
+          <div className="right-projects flex flex-col space-y-2">
+            {projects
+              .filter(project => ['Kasa', 'Mon vieux grimoire', 'Menu Maker by Qwenta'].includes(project.title))
+              .map(project => (
+                <ProjectThumbnail key={project.id} project={project} />
+              ))}
+            {skills
+              .filter(skill => skill.id === 2)
+              .map(skill => (
+                <SkillThumbnail key={skill.id} skill={skill} />
+              ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Container pour les miniatures en dessous de 1280px */}
+      <div className="xl:hidden w-full">
+        {/* About section pour petits écrans */}
+        <div className="about-section bg-white p-4 rounded-lg shadow mb-4">
           <h3 className="text-xl font-bold mb-2">À propos de moi</h3>
           <p className="text-gray-600">
             Développeur web passionné, en React et Node.js.
             Débloquez mes projets en complétant des lignes au Tetris !
           </p>
         </div>
-        <div className="left-projects flex flex-col space-y-4">
+
+        {/* Grid pour toutes les miniatures */}
+        <div className="grid grid-cols-3 gap-2 md:grid-cols-4">
           {skills
             .filter(skill => skill.id === 1)
             .map(skill => (
               <SkillThumbnail key={skill.id} skill={skill} />
             ))}
-          {projects
-            .filter(project => ['Booki', 'Sophie Bluel', 'Nina Carducci'].includes(project.title))
-            .map(project => (
-              <ProjectThumbnail key={project.id} project={project} isLeft={true} />
-            ))}
-        </div>
-      </div>
-
-      {/* Tetris au centre */}
-      <div 
-        className="tetris-container bg-white rounded-lg shadow-lg p-6 focus:outline-none" 
-        tabIndex="-1"
-      >
-        <h2 className='text-4xl font-bold text-gray-800 mb-4 text-center mr-20'>
-          <FontAwesomeIcon icon={faGamepad} /> Tetris <FontAwesomeIcon icon={faGamepad} />
-        </h2>
-        <Tetris
-          keyboardControls={{
-            down: 'MOVE_DOWN',
-            left: 'MOVE_LEFT',
-            right: 'MOVE_RIGHT',
-            space: 'HARD_DROP',
-            z: 'FLIP_COUNTERCLOCKWISE',
-            x: 'FLIP_CLOCKWISE',
-            up: 'FLIP_CLOCKWISE',
-            p: 'TOGGLE_PAUSE',
-            c: 'HOLD',
-            shift: 'HOLD',
-          }}
-        >
-          {({
-            HeldPiece,
-            Gameboard,
-            PieceQueue,
-            points,
-            linesCleared,
-            state,
-            controller,
-          }) => {
-            if (gameController !== controller) setGameController(controller);
-            if (gameState !== state) setGameState(state);
-            if (currentLinesCleared !== linesCleared) setCurrentLinesCleared(linesCleared);
-
-            return (
-              <div className="tetris-game">
-                <div className="points text-xl">
-                  <div>
-                    <p>Points</p>
-                    <p>{points}</p>
-                  </div>
-                  <div>
-                    <p>Lignes</p>
-                    <p>{linesCleared}</p>
-                  </div>
-                  <div>
-                    <p>Top Score</p>
-                    <p>{highScore}</p>
-                  </div>
-                </div>
-                <div className="held-piece-container">
-                  <HeldPiece />
-                </div>
-                <Gameboard />
-                <div className="piece-queue-container">
-                  <PieceQueue />
-                </div>
-                <div className="controls">
-                  <h3 className='font-bold text-gray-800 py-5'>Controls</h3>
-                  <div className="control-row">
-                    <FontAwesomeIcon icon={faArrowUp} /> Rotate
-                  </div>
-                  <div className="control-row">
-                    <FontAwesomeIcon icon={faArrowLeft} /> Left
-                  </div>
-                  <div className="control-row">
-                    <FontAwesomeIcon icon={faArrowRight} /> Right
-                  </div>
-                  <div className="control-row">
-                    <FontAwesomeIcon icon={faArrowDown} /> Soft Drop
-                  </div>
-                  <div className="control-row">
-                    ▬ Drop
-                  </div>
-                  <div>"C" hold</div>
-                  <div>"P" Pause</div>
-                </div>
-                <button
-                  onClick={handleRestart}
-                  className="restart-button text-gray-800 font-bold mt-12 bg-blue-400 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                >
-                  Rejouer
-                </button>
-              </div>
-            );
-          }}
-        </Tetris>
-      </div>
-
-      {/* Colonne de droite */}
-      <div className="right-column w-1/5">
-        <div className="right-projects flex flex-col space-y-4">
-          {projects
-            .filter(project => ['Kasa', 'Mon vieux grimoire'].includes(project.title))
-            .map(project => (
-              <ProjectThumbnail key={project.id} project={project} isLeft={false} />
-            ))}
-          {projects
-            .filter(project => project.title === 'Menu Maker by Qwenta')
-            .map(project => (
-              <ProjectThumbnail key={project.id} project={project} isLeft={false} />
-            ))}
+          {projects.map(project => (
+            <ProjectThumbnail key={project.id} project={project} />
+          ))}
           {skills
             .filter(skill => skill.id === 2)
             .map(skill => (
               <SkillThumbnail key={skill.id} skill={skill} />
-            ))}
+          ))}
         </div>
       </div>
 
-      {/* Modal */}
+      {/* Modals */}
       {selectedProject && (
-        <ProjectModal 
-          project={selectedProject} 
-          onClose={() => setSelectedProject(null)} 
-        />
+        <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} />
       )}
-
-      {/* Ajouter la modal des compétences */}
       {selectedSkill && (
-        <SkillModal 
-          skill={selectedSkill} 
-          onClose={() => setSelectedSkill(null)} 
-        />
+        <SkillModal skill={selectedSkill} onClose={() => setSelectedSkill(null)} />
       )}
     </div>
   );

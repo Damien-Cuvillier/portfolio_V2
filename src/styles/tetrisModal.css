@@ -23,25 +23,467 @@
     max-width: 1600px;
     margin: 0 auto;
   }
-  
- 
-  
-  /* Responsive design */
-  @media (max-width: 1280px) {
-    .tetris-page-container {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .left-column,
-    .right-column {
-      width: 100%;
-      max-width: 600px;
-    }
-  
-    .tetris-container {
-      width: 100%;
-      max-width: 600px;
-      margin: 2rem 0;
-    }
+  /* src/Components/Tetris.scss */
+.tetris-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+    touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.game-info {
+  margin-bottom: 1rem;
+}
+
+.tetris-game {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  padding-top: 100px;
+  padding-left: 100px;
+}
+
+.held-piece-container, .piece-queue-container {
+  margin: 0 1rem;
+}
+
+.project-thumbnail.unlocked {
+  cursor: pointer;
+  transform: translateY(0);
+  transition: transform 0.2s ease-in-out;
+}
+
+.project-thumbnail.unlocked:hover {
+  transform: translateY(-4px);
+}
+
+.modal-overlay {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal-content {
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { 
+    opacity: 0;
+    transform: translateY(-20px);
   }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.held-piece-container .piece-view,
+.piece-queue-container .piece-view {
+  border-spacing: 0;
+  padding: 10px;
+  border-radius: 10px;
+}
+.held-piece-container{
+  margin-bottom: 380px;
+
+}
+.table-view{
+  border:solid 1px #282c34;
+}
+.game-over {
+  margin-top: 1rem;
+}
+
+.game-block {
+  margin: 0;
+  padding: 0;
+  width: 1.5em;
+  height: 1.5em;
+  border: 1px solid #ddd;
+}
+
+.piece-i {
+  background-color: #ec858b;
+}
+
+.piece-j {
+  background-color: #f1b598;
+}
+
+.piece-l {
+  background-color: #f8efae;
+}
+
+.piece-o {
+  background-color: #b5a677;
+}
+
+.piece-s {
+  background-color: #816e56;
+}
+
+.piece-t {
+  background-color: #b77c72;
+}
+
+.piece-z {
+  background-color: #e3be58;
+}
+
+.piece-preview {
+  background-color: #c2c2c2;
+  opacity: 0.5;
+}
+.points {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  width: 75%;
+  text-align: center;
+  top: 100px;
+  left: 150px;
+  padding-right: 170px;
+}
+.points > div {
+  text-align: center;
+}
+.scores-container {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 10;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  
+}
+
+.tetris-container {
+  position: relative;
+}
+
+.points p {
+  margin: 0;
+  font-family: monospace;
+  
+}
+
+.controls{
+  position: relative;
+  text-align: left;
+  right: 65%;
+  top:120px;
+  width: 120px;
+  transform: translateX(-50%);
+}
+
+.swal2-confirm {
+  background-color: lightgreen;
+  border: 1px solid lightgreen;
+}
+.restart-button {
+  position:relative;
+  top: 270px;
+  right: 50%;
+  transform: translateX(-50%);
+  color: #282c34;
+}
+.item{
+  width: 500px;
+  height: 500px;
+}
+
+
+
+/* Styles pour les contrôles tactiles */
+.touch-controls {
+  position: fixed;
+  bottom: 70px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 10;
+}
+
+.direction-pad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.horizontal-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 2px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #333;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.control-button:active {
+  transform: scale(0.95);
+  background-color: rgba(200, 200, 200, 0.8);
+}
+
+.hold, .drop {
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Styles de base pour le jeu */
+.game-board {
+  border-spacing: 0;
+  min-width: 250px; /* Taille minimale pour le plateau */
+  width: 40%;
+}
+
+/* Styles pour les conteneurs de pièces */
+.held-piece-container .piece-view,
+.piece-queue-container .piece-view {
+  border-spacing: 0;
+  padding: 10px;
+  border-radius: 10px;
+  min-width: 100px; /* Taille minimale pour les pièces */
+}
+.piece-queue-container .piece-view tr {
+  display: flex;
+}
+
+.piece-queue-container .piece-view tr td:last-child.game-block.block-empty {
+  display: none;
+}
+/* Masquer le bouton quand une modale est ouverte */
+.restart-button.hidden {
+  display: none !important;
+}
+
+/* S'assurer que la modale est au-dessus de tous les autres éléments */
+.modal-overlay {
+  z-index: 9999;
+}
+/* Media queries pour les écrans moyens et petits */
+@media (max-width: 1280px) {
+  .tetris-game {
+    padding-left: 0;
+    transform-origin: top center;
+    width: 80%;
+  }
+
+  .game-board {
+    width: 250px !important; /* Force une largeur fixe */
+    min-width: 250px;
+  }
+
+  
+  .piece-queue-container {
+    margin: 0 10px;
+  }
+
+  .held-piece-container .piece-view,
+  .piece-queue-container .piece-view {
+    width: 100px !important; /* Force une largeur fixe */
+    min-width: 100px;
+  }
+
+  
+}
+
+/* Style pour les écrans moyens (entre 750px et 1280px) */
+@media (750px <= width <= 1280px) {
+  .points {
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+    width:500px;
+  }
+  .tetris-container h2{
+    margin: 0;
+  }
+  .points > div {
+    flex: 1;
+    margin: 0 10px;
+  }
+  .controls {
+    position: absolute;
+    left: 48%;
+    top: 420px;
+    width: 120px;
+    margin-left: -150px; /* Valeur fixe pour maintenir la position */
+  }
+
+  /* Position fixe pour le bouton Rejouer */
+  .restart-button {
+    position: absolute;
+    top: 635px;
+    left: 45%; 
+    transform: none;
+    width: 90px;
+  }
+  .about-section{
+    margin-top:10px;
+  }
+}
+
+/* Ajustements spécifiques pour mobile */
+@media (max-width: 750px) {
+  .tetris-container {
+    padding: 1rem !important;
+    height: 800px;
+  }
+
+  .tetris-game {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin: 60px auto 20px;
+    padding: 0;
+    width: 100%;
+  }
+
+  /* Contrôles tactiles */
+  .touch-controls {
+    position: absolute;
+    top: 520px;
+    left: 70px;
+    right: 90px;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    pointer-events: none;
+    z-index: 10;
+  }
+
+  /* Pad directionnel à gauche */
+  .direction-pad {
+    position: relative;
+    left: -80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    pointer-events: auto;
+  }
+
+  /* Boutons d'action à droite */
+  .action-buttons {
+    position: relative;
+    right: -80px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    pointer-events: auto;
+    
+  }
+
+  /* Ajuster la taille des boutons */
+  .control-button {
+    width: 50px;
+    height: 50px;
+    font-size: 15px;
+  }
+
+  .held-piece-container{
+    margin-bottom:400px;
+  }
+  /* Maintenir la taille des blocs du jeu */
+  .game-block {
+    width: 25px !important;
+    height: 25px !important;
+    min-width: 25px !important;
+    min-height: 25px !important;
+  }
+  .tetris-container h2 {
+    display: none;
+  }
+  .points{
+    left:50px;
+    top:-70px;
+    width: 80%;
+    gap:5px;
+    padding: 0;
+  }
+  .restart-button {
+    position: fixed;
+    top: 10px; /* Ajustez cette valeur selon votre header */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000; /* Pour s'assurer qu'il reste au-dessus des autres éléments */
+    margin: 0;
+    right: auto;
+    bottom: auto;
+  }
+  .restart-button p {
+    width:100px;
+  }
+
+}
+
+/* Ajustements pour les très petits écrans */
+@media (max-width: 520px) {
+  .game-block {
+    width: 20px !important;
+    height: 20px !important;
+    min-width: 20px !important;
+    min-height: 20px !important;
+  }
+  .direction-pad {
+    left: -60px;
+  }
+  .tetris-game {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  .game-board {
+    margin-right: 80px;
+  }
+  .held-piece-container {
+    order: 3; /* Place le held-piece en dernier */
+    margin-bottom: 20px;
+    margin-top: 20px;
+    position: relative;
+    left: 0;
+  }
+  .piece-queue-container {
+    position: absolute;
+    right: -50px; /* Ajustez selon vos besoins */
+    top: 38.5%;
+    transform: translateY(-50%);
+    
+  }
+  .action-buttons {
+    right: -60px;
+  }
+}
