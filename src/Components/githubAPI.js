@@ -3,41 +3,34 @@ const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 export const fetchRepoLanguages = async (repoUrl) => {
   try {
     if (!GITHUB_TOKEN) {
-      throw new Error("GitHub token is missing! Please check your .env file.");
+      throw new Error("GitHub token is missing!");
     }
 
-    // Vérification du token
-    const verificationResponse = await fetch('https://api.github.com/user', {
+    console.log('Fetching repo data from:', repoUrl);
+    
+    const response = await fetch(repoUrl, {
       headers: {
-        'Authorization': `token ${GITHUB_TOKEN}`, // Changé de 'Bearer' à 'token'
         'Accept': 'application/vnd.github.v3+json',
+        'Authorization': `Bearer ${GITHUB_TOKEN}`,
         'X-GitHub-Api-Version': '2022-11-28'
       }
     });
 
-    if (!verificationResponse.ok) {
-      throw new Error("GitHub token is invalid or expired");
-    }
-
-    // Requête pour les langages
-    const response = await fetch(repoUrl, {
-      headers: {
-        'Authorization': `token ${GITHUB_TOKEN}`, // Changé de 'Bearer' à 'token'
-        'Accept': 'application/vnd.github.v3+json',
-        'X-GitHub-Api-Version': '2022-11-28'
-      },
-      cache: 'no-store'
-    });
-
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(`GitHub API request failed: ${errorData.message || response.status}`);
+      console.error('API Response:', {
+        status: response.status,
+        statusText: response.statusText,
+        data: errorData
+      });
+      throw new Error(`GitHub API request failed: ${errorData.message}`);
     }
 
     const data = await response.json();
+    console.log('Data fetched successfully:', data);
     return data;
   } catch (error) {
-    console.error('Error fetching GitHub data:', error.message);
+    console.error('Error in fetchRepoLanguages:', error);
     return { error: error.message };
   }
 };
