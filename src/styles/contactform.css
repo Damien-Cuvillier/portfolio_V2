@@ -1,0 +1,14 @@
+@media screen and (max-height: 700px) {
+    .Form {
+        padding: 1rem;
+        margin: 1rem;
+    }
+    .text-center h2 {
+        font-size: 28px;
+        margin: 0;
+    }
+    .text-center p {
+        font-size: 14px;
+    }
+    
+}

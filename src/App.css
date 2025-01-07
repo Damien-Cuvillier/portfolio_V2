@@ -199,3 +199,47 @@ a {
     font-size: 8px;
   }
 }
+@media screen and (max-height: 855px) {
+  .competences-grid{
+    padding: 0;
+    gap:1rem
+  }
+  .svgBack, .svgFront{
+    width: 200px;
+    height: 200px;
+  }
+  .text-3xl{
+    font-size: 18px;
+    padding:0.5rem;
+    
+  }
+  #projects h2 {
+    margin-bottom: 0;
+  }
+  .description li{
+    font-size: 12px;
+  }
+  .Carrou{
+    height: 200px;
+    padding:0
+  }
+  .carousel .control-dots {
+    position: static !important;
+    margin-top: 10px !important;
+  }
+  
+}
+
+@media screen and (max-height: 700px) {
+  .graphGithub{
+    display: none;
+  }
+  .Carrou{
+    height: 250px;
+  }
+  .legend{
+    padding:0 1rem;
+    margin-top: 0;
+    justify-content: start;
+  }
+}

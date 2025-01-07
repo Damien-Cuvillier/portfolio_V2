@@ -10,7 +10,7 @@ module.exports = {
         'custom-black' : '#282c34',
       },
       screens: {
-        'custom': '750px',
+        'custom': '768px',
       },
     },
   },

@@ -225,7 +225,22 @@ const handleRestart = () => {
       });
     }
   }, [gameState, currentLinesCleared, gameController]);
-
+  
+  useEffect(() => {
+    const preventSpaceScroll = (e) => {
+      if (e.code === 'Space' && e.target === document.body) {
+        e.preventDefault();
+      }
+    };
+  
+    // Ajouter l'écouteur d'événements
+    window.addEventListener('keydown', preventSpaceScroll);
+  
+    // Nettoyer l'écouteur d'événements
+    return () => {
+      window.removeEventListener('keydown', preventSpaceScroll);
+    };
+  }, []);
   // Déplacer les composants à l'intérieur de TetrisComponent
   const SkillThumbnail = ({ skill }) => (
     <div 
@@ -380,7 +395,7 @@ const ProjectModal = ({ project, onClose }) => {
     </div>
   );
 
-  // Ajoutez ces nouveaux composants pour les contrôles tactiles
+  //  nouveaux composants pour les contrôles tactiles
   const TouchControls = ({ controller }) => {
     const handleTouchStart = (action) => (e) => {
       e.preventDefault();
@@ -541,7 +556,7 @@ const ProjectModal = ({ project, onClose }) => {
                       <p>{linesCleared}</p>
                     </div>
                     <div>
-                      <p>Top Score</p>
+                      <p>Top</p>
                       <p>{highScore}</p>
                     </div>
                   </div>
@@ -553,7 +568,7 @@ const ProjectModal = ({ project, onClose }) => {
                     <PieceQueue />
                   </div>
                   {/* Remplacez les contrôles clavier par les contrôles tactiles sur mobile */}
-                  {window.innerWidth <= 750 ? (
+                  {window.innerWidth <= 1024 ? (
                     <TouchControls controller={controller} />
                   ) : (
                     <div className="controls">

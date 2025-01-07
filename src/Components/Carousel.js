@@ -63,7 +63,7 @@ const projects = [
       'Planification du développement du site de Menu Maker.',
       'Dans ce projet j\'ai mis en place une veille technologique pour rester informé des dernières tendances et technologies pertinentes pour le projet.',
       'Je me suis chargé de rédiger les spécifications techniques du projet donc l\'identification des besoins fonctionnels et la décomposition des fonctionnalités en tâches spécifiques.',
-      'J\'ai aussi utilisé un outil de gestion de projet, comme Notion, pour organiser le projet et créer un tableau Kanban. Cela aide à suivre le déroulement du projet de manière structurée et efficace. Présentation des résultats dans un rapport d\'intervention',
+      'J\'ai aussi utilisé un outil de gestion de projet, comme Notion, pour organiser le projet et créer un tableau Kanban. Présentation des résultats dans un rapport d\'intervention',
     ],
       imageUrl: process.env.PUBLIC_URL + '/images/MenuMaker.webp',
     projectURL:''
@@ -116,7 +116,7 @@ const ProjectsCarousel = () => {
       >
         {repos.map((repo, index) => (
           <div className="bg-gray-100 max-w-full flex-col mx-auto h-full" key={index}>
-            <div className="relative pb-8">
+            <div className="Carrou relative pb-8">
               <img src={repo.imageUrl} alt={repo.title} className="w-full h-64 object-cover rounded-md" />
             </div>
           </div>

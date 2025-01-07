@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import emailjs from '@emailjs/browser'; 
-
+import "../styles/contactform.css"
 const ContactForm = ({ showOnlyForm = false }) => {
   useEffect(() => {
     // Initialiser EmailJS
@@ -49,7 +49,7 @@ const ContactForm = ({ showOnlyForm = false }) => {
         >
           {({ isSubmitting }) => (
             <div className={`${showOnlyForm ? '' : 'min-h-screen'} bg-gray-200 rounded-xl flex items-center justify-center `}>
-              <div className="w-full max-w-2xl bg-gray-200 rounded-2xl shadow-xl p-8 mx-auto">
+              <div className="Form w-full max-w-2xl bg-gray-200 rounded-2xl shadow-xl p-8 mx-auto h-full">
                 <div className="text-center mb-8">
                   <h2 id='contacts' className='text-4xl font-bold text-gray-800 mb-4'>Contactez moi !</h2>
                   <p className='text-lg text-gray-600 max-w-md mx-auto'>

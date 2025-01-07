@@ -191,7 +191,7 @@
 }
 .restart-button {
   position:relative;
-  top: 270px;
+  bottom: -280px;
   right: 50%;
   transform: translateX(-50%);
   color: #282c34;
@@ -281,6 +281,9 @@
 .piece-queue-container .piece-view tr td:last-child.game-block.block-empty {
   display: none;
 }
+.held-piece-container .piece-view tr td:last-child.game-block.block-empty{
+  display: none;
+}
 /* Masquer le bouton quand une modale est ouverte */
 .restart-button.hidden {
   display: none !important;
@@ -299,7 +302,7 @@
   }
 
   .game-board {
-    width: 250px !important; /* Force une largeur fixe */
+    width: 250px !important; 
     min-width: 250px;
   }
 
@@ -310,15 +313,15 @@
 
   .held-piece-container .piece-view,
   .piece-queue-container .piece-view {
-    width: 100px !important; /* Force une largeur fixe */
+    width: 100px !important; 
     min-width: 100px;
   }
 
   
 }
 
-/* Style pour les écrans moyens (entre 750px et 1280px) */
-@media (750px <= width <= 1280px) {
+/* Style pour les écrans moyens (entre 768px et 1280px) */
+@media (768px <= width <= 1280px) {
   .points {
     top: 100px;
     left: 50%;
@@ -334,31 +337,59 @@
     margin: 0 10px;
   }
   .controls {
-    position: absolute;
-    left: 48%;
-    top: 420px;
-    width: 120px;
-    margin-left: -150px; /* Valeur fixe pour maintenir la position */
+    display: none;
   }
 
   /* Position fixe pour le bouton Rejouer */
   .restart-button {
-    position: absolute;
-    top: 635px;
-    left: 45%; 
+    
+    bottom: -270px;
+    left: -250px; 
     transform: none;
     width: 90px;
   }
   .about-section{
     margin-top:10px;
   }
+  .touch-controls {
+    position: absolute;
+    top: 520px;
+    left: 70px;
+    right: 90px;
+    bottom: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    pointer-events: none;
+    z-index: 10;
+  }
+  .direction-pad {
+    position: relative;
+    left: 10px;
+    bottom:50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    pointer-events: auto;
+  }
+  .action-buttons {
+    position: relative;
+    right: -20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    pointer-events: auto;
+    bottom:50px;
+  }
+
 }
 
 /* Ajustements spécifiques pour mobile */
-@media (max-width: 750px) {
+@media (max-width: 768px) {
   .tetris-container {
     padding: 1rem !important;
-    height: 800px;
+    height: 650px;
   }
 
   .tetris-game {
@@ -367,6 +398,7 @@
     justify-content: center;
     margin: 60px auto 20px;
     padding: 0;
+    transform: scale(0.9);
     width: 100%;
   }
 
@@ -388,10 +420,11 @@
   .direction-pad {
     position: relative;
     left: -80px;
+    bottom:90px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 5px;
     pointer-events: auto;
   }
 
@@ -403,7 +436,8 @@
     flex-direction: column;
     gap: 20px;
     pointer-events: auto;
-    
+    flex-direction: row;
+    bottom:0px;
   }
 
   /* Ajuster la taille des boutons */
@@ -411,18 +445,14 @@
     width: 50px;
     height: 50px;
     font-size: 15px;
+    
   }
 
   .held-piece-container{
-    margin-bottom:400px;
+    margin-bottom:385px;
   }
   /* Maintenir la taille des blocs du jeu */
-  .game-block {
-    width: 25px !important;
-    height: 25px !important;
-    min-width: 25px !important;
-    min-height: 25px !important;
-  }
+
   .tetris-container h2 {
     display: none;
   }
@@ -435,13 +465,11 @@
   }
   .restart-button {
     position: fixed;
-    top: 10px; /* Ajustez cette valeur selon votre header */
+    bottom: -50px; /* Ajustez cette valeur selon votre header */
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1000; /* Pour s'assurer qu'il reste au-dessus des autres éléments */
     margin: 0;
     right: auto;
-    bottom: auto;
   }
   .restart-button p {
     width:100px;
@@ -451,20 +479,17 @@
 
 /* Ajustements pour les très petits écrans */
 @media (max-width: 520px) {
-  .game-block {
-    width: 20px !important;
-    height: 20px !important;
-    min-width: 20px !important;
-    min-height: 20px !important;
-  }
+ 
   .direction-pad {
-    left: -60px;
+    left: -100px;
+    bottom:10px;
   }
   .tetris-game {
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
+    transform: scale(0.8);
   }
   .game-board {
     margin-right: 80px;
@@ -478,12 +503,29 @@
   }
   .piece-queue-container {
     position: absolute;
-    right: -50px; /* Ajustez selon vos besoins */
+    right: -60px; /* Ajustez selon vos besoins */
     top: 38.5%;
     transform: translateY(-50%);
     
   }
   .action-buttons {
-    right: -60px;
+    right: -70px;
+    flex-direction: column;
+  }
+  .points{
+    left:10%;
+    font-weight: 500;
+  }
+  .control-button {
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+    
+  }
+  .touch-controls{
+    left:50px
+  }
+  .restart-button{
+    bottom:-25px;
   }
 }
