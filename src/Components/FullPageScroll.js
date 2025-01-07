@@ -4,6 +4,8 @@ import "../styles/fullpage.css"
 const FullPageScroll = ({ children, currentPage: externalCurrentPage, onPageChange }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
   // Détecter si on est sur mobile
   useEffect(() => {
@@ -14,6 +16,31 @@ const FullPageScroll = ({ children, currentPage: externalCurrentPage, onPageChan
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Gestion du touch pour le scroll
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientY);
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isSwipeDown = distance < -50;
+    const isSwipeUp = distance > 50;
+    
+    if (isSwipeDown || isSwipeUp) {
+      // Permettre le scroll naturel
+      e.target.style.overflow = 'auto';
+    }
+    
+    setTouchStart(null);
+    setTouchEnd(null);
+  };
 
   const handlePageChange = number => {
     setCurrentPage(number);
@@ -40,7 +67,6 @@ const FullPageScroll = ({ children, currentPage: externalCurrentPage, onPageChan
     const headerNavHandler = (e) => {
       if (e.detail && typeof e.detail.page === 'number') {
         if (isMobile) {
-          // Sur mobile, faire défiler jusqu'à la section
           const element = document.getElementById(`section-${e.detail.page}`);
           if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
@@ -57,9 +83,17 @@ const FullPageScroll = ({ children, currentPage: externalCurrentPage, onPageChan
 
   if (isMobile) {
     return (
-      <div className="mobile-scroll">
+      <div 
+        className="mobile-scroll"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {React.Children.map(children, (child, index) => (
-          <div id={`section-${index}`} className="mobile-section">
+          <div 
+            id={`section-${index}`} 
+            className="mobile-section"
+          >
             {child}
           </div>
         ))}

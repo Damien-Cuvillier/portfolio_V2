@@ -3,24 +3,45 @@
   height: auto;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-y pinch-zoom;
+  
 }
-
+#section-3{
+  background-color: #e5e7eb;
+}
 .mobile-section {
   min-height: 100vh;
   width: 100%;
   position: relative;
+  margin: 0 !important; /* Supprime les marges */
+  padding: 0 !important; /* Supprime le padding */
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Optionnel : Ajuster l'espacement entre les sections */
+/* Supprimer tout espacement entre les sections */
 .mobile-section + .mobile-section {
-  margin-top: 1rem;
+  margin-top: 0 !important;
 }
 
-/* Assurer que le contenu est visible sur mobile */
+/* Ajuster pour le header fixe */
 @media (max-width: 768px) {
   .mobile-section {
-    height: auto;
-    min-height: 100vh;
-    padding: 60px 0; /* Ajuster selon la hauteur de votre header */
+    height: 100vh; /* Hauteur fixe au lieu de min-height */
+   
+    box-sizing: border-box;
+  }
+
+  /* Assurer que le contenu ne déborde pas */
+  .mobile-section > * {
+    height: calc(100% - 60px); /* Ajuster selon la hauteur de votre header */
+  }
+  .tetris-container {
+    touch-action: pan-x pan-y; /* Permet le scroll dans toutes les directions */
+    pointer-events: auto;
+  }
+  /* Pour les contrôles du jeu */
+  .touch-controls {
+    touch-action: none; /* Désactive le scroll uniquement sur les contrôles */
+    pointer-events: auto;
   }
 }

@@ -1,7 +1,7 @@
 import React from 'react';
 import FrontEndImg from './FrondEndImg'
 import BackEndImg from './BackEndImg'
-import '../App.css'
+import '../styles/skills.css'
 
 function Competences() {
   const [pathWidth, setPathWidth] = React.useState(0);

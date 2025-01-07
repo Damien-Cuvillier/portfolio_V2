@@ -12,3 +12,15 @@
     }
     
 }
+
+@media (max-width: 768px) {
+    .Form {
+        height: 100vh;
+        margin: 0 !important;
+        padding: 1rem !important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    
+}

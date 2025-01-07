@@ -1,0 +1,145 @@
+
+/* Carousel des projets */
+.carousel .slide img {
+    width: 100%;
+    height: 500px; 
+    object-fit: scale-down; 
+  }
+  /* Style des flèches */
+  .control-arrow {
+    padding:20px;
+    margin:0 15px;
+    width: 65px;
+  }
+  
+  .legend {
+    height: auto; /* Remplace la hauteur fixe par auto */
+    min-height: 350px; /* Hauteur minimum */
+    max-height: 450px; /* Hauteur maximum */
+    overflow-y: auto; /* Permet le défilement si le contenu est trop long */
+  }
+  
+  .carousel .legend h3 {
+    margin: 0;
+  }
+  
+  .carousel .legend p {
+    margin: 5px 0 0;
+  }
+  .carousel .slide .legend{
+    background-color: darkslategray;
+  }
+  
+  .carousel-status{
+    display: none;
+  }
+  
+  
+  /* Style des points de navigation */
+  .carousel .control-dots .dot {
+    transition: all 0.3s ease-in-out;
+    opacity: 0.5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    background: #fff;
+    border-radius: 50%;
+    width: 12px; /* Plus grand */
+    height: 12px; /* Plus grand */
+    cursor: pointer;
+    display: inline-block;
+    margin: 0 8px;
+    border: 2px solid rgba(0, 0, 0, 0.5); /* Bordure pour plus de contraste */
+  }
+  
+  /* Style du point sélectionné */
+  .carousel .control-dots .dot.selected {
+    opacity: 1;
+    background: #2c3e50; /* Couleur plus visible quand sélectionné */
+    transform: scale(1.2); /* Légèrement plus grand */
+    border: 2px solid #fff; /* Bordure blanche pour contraste */
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Effet hover */
+  .carousel .control-dots .dot:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+  /* Container des points */
+  .carousel .control-dots {
+    bottom: -10px; /* Position plus haute */
+  }
+
+  /* Ajustements responsifs */
+@media (max-width: 1629px) {
+  
+
+    /* Réduire la taille du texte */
+    .legend h3 {
+      font-size: 1rem;
+    }
+  
+    .legend ul {
+      font-size: 0.875rem;
+    }
+  }
+  @media (768px <= width <= 1700px)  {
+    .carousel .slide img {
+      height: 420px; /* Réduire la hauteur de l'image */
+    }
+  }
+
+  @media (360px <= width <= 767px) {
+    .carousel .slide img {
+      height: 300px;
+      object-fit: scale-down; /* Garantit que l'image entière est visible */
+      max-width: 100%;
+      width: inherit;
+      margin: 0 auto;
+    }
+    .carousel .control-dots{
+      margin-top: 0px;
+    }
+    .graphGithub{
+      width: 70%;
+      order:2;
+      margin: 0 auto;
+    }
+    .description{
+      font-size: 8px;
+    }
+    .project-title{
+        margin-bottom: 0;
+        margin-top: 1rem;
+      }
+      /* Ajuster le conteneur du carousel */
+  .carousel-root {
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  }
+
+  @media screen and (max-height: 855px) {
+   
+      .description li{
+        font-size: 12px;
+      }
+      .Carrou{
+        height: 200px;
+        padding:0
+      }
+      .carousel .control-dots {
+        position: static !important;
+        margin-top: 10px !important;
+      }
+  }
+
+  @media screen and (max-height: 700px) {
+    .Carrou{
+      height: 250px;
+    }
+    .legend{
+      padding:0 1rem;
+      margin-top: 0;
+      justify-content: start;
+    }
+  }

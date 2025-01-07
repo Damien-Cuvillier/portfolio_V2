@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Carousel } from 'react-responsive-carousel';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import '../App.css';
+import '../styles/Carrousel.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { fetchRepoLanguages } from './githubAPI';
@@ -29,7 +29,7 @@ const projects = [
   {
     title: 'Nina Carducci Photographe',
     description: [
-      'Débuggage et optimisation d\'un site de photographe.',
+      'Débuggage et optimisation.',
       'Dans ce projet je devais optimiser le référencement du site, en améliorant sa performance et son accessibilité.', 
       'Je devais identifier les problèmes de chargement et de référencement avec des outils comme Lighthouse ou Wave pour évaluer les performances du site et son accessibilité.',
       'Je devais élaborer des recommandations pour améliorer la vitesse de chargement, la structure du code et le référencement, dans un rapport.',
@@ -40,7 +40,7 @@ const projects = [
   {
     title: 'Kasa',
     description: [
-      'Refonte d\'une application de location immobilière avec React et React Router.',
+      'Refonte d\'une application de location immobilière',
       'Kasa est une application React de location d\'appartement entre particuliers en France, j\'ai du utiliser React Router pour configurer la navigation entre les différentes pages de l\'application.',
       'Pour ce projet j\'ai développé les différentes pages de l\'application (Accueil, A propos, Détails de location, 404) ainsi que les composants présents sur ces pages (Carrousel, slider, collapse, grid, banner)',
     ],
