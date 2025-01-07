@@ -35,7 +35,7 @@ function Competences() {
         <div className="competence-item flex flex-row justify-around w-full max-w-screen-2xl mx-auto relative">
           <div ref={frontEndRef}>
             <FrontEndImg />
-            <h3 className='text-3xl font-bold text-gray-800 px-5 py-10'>Front-End</h3>
+            <h3 className='titreSVG text-3xl font-bold text-gray-800 px-5 py-10'>Front-End</h3>
           </div>
           
           <div className="flux" style={{ '--path-width': `${pathWidth}px` }}>
@@ -44,7 +44,7 @@ function Competences() {
           
           <div ref={backEndRef}>
             <BackEndImg />
-            <h3 className='text-3xl font-bold text-gray-800 px-5 py-10'>Back-end</h3>
+            <h3 className='titreSVG text-3xl font-bold text-gray-800 px-5 py-10'>Back-end</h3>
           </div>
         </div>
       </div>

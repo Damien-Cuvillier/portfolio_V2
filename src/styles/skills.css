@@ -57,7 +57,7 @@
       width: 270px;
     }
 
-    .text-3xl{
+    .titreSVG{
       padding: 1rem;
       
     }
@@ -82,7 +82,7 @@
       width: 200px;
       height: 200px;
     }
-    .text-3xl{
+    .titreSVG{
       font-size: 18px;
       padding:0.5rem;
       
@@ -91,7 +91,7 @@
     
   }
   @media screen and (max-width: 640px) {
-    .text-3xl{
+    .titreSVG{
         padding:1rem;
     }
   }

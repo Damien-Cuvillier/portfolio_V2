@@ -48,7 +48,7 @@ const ContactForm = ({ showOnlyForm = false }) => {
           }}
         >
           {({ isSubmitting }) => (
-            <div className={`${showOnlyForm ? '' : 'min-h-screen'} bg-gray-200 rounded-xl flex items-center justify-center `}>
+            <div className={`${showOnlyForm ? '' : 'min-h-screen'} bg-gray-200  flex items-center justify-center `}>
               <div className="Form w-full max-w-2xl bg-gray-200 rounded-2xl shadow-xl p-8 mx-auto h-full">
                 <div className="text-center mb-8">
                   <h2 id='contacts' className='text-4xl font-bold text-gray-800 mb-4'>Contactez moi !</h2>

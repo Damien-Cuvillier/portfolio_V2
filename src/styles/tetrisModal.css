@@ -319,8 +319,16 @@
 
   
 }
-
-/* Style pour les écrans moyens (entre 768px et 1280px) */
+@media (1024px <= width <= 1280px) {
+  .points {
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0;
+    width:500px;
+  }
+}
+/* Style pour les écrans moyens (entre 768px et 1024px) */
 @media (768px <= width <= 1280px) {
   .points {
     top: 100px;
@@ -354,7 +362,7 @@
   .touch-controls {
     position: absolute;
     top: 520px;
-    left: 70px;
+    left: 40px;
     right: 90px;
     bottom: 0;
     display: flex;
@@ -365,7 +373,7 @@
   }
   .direction-pad {
     position: relative;
-    left: 10px;
+    left: 0px;
     bottom:50px;
     display: flex;
     flex-direction: column;

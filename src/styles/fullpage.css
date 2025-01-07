@@ -22,7 +22,18 @@
 .mobile-section + .mobile-section {
   margin-top: 0 !important;
 }
-
+@media (max-width:1024px) {
+  .tetris-container {
+    touch-action: pan-x pan-y; /* Permet le scroll dans toutes les directions */
+    pointer-events: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Pour les contrôles du jeu */
+  .touch-controls {
+    touch-action: none; /* Désactive le scroll uniquement sur les contrôles */
+    pointer-events: auto;
+  }
+}
 /* Ajuster pour le header fixe */
 @media (max-width: 768px) {
   .mobile-section {

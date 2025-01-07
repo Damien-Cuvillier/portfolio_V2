@@ -150,24 +150,12 @@ const TetrisComponent = ({
       // Mettre à jour les états seulement s'il y a de nouveaux éléments débloqués
       if (newUnlockedProjects.length > 0) {
         setUnlockedProjects([...unlockedProjects, ...newUnlockedProjects]);
-        Swal.fire({
-          title: 'Projet débloqué !',
-          text: `Vous avez débloqué ${newUnlockedProjects.length} nouveau(x) projet(s) !`,
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false
-        });
+        showUnlockModal('Projet', newUnlockedProjects[0]);
       }
   
       if (newUnlockedSkillIds.length > 0) {
         setUnlockedSkills([...unlockedSkills, ...newUnlockedSkillIds]);
-        Swal.fire({
-          title: 'Compétences débloquées !',
-          text: `Vous avez débloqué ${newUnlockedSkillIds.length} nouvelle(s) compétence(s) !`,
-          icon: 'success',
-          timer: 1500,
-          showConfirmButton: false
-        });
+        showUnlockModal('Compétence', newUnlockedSkillIds[0]);
       }
   
       setPreviousLinesCleared(currentLinesCleared);
@@ -241,6 +229,25 @@ const handleRestart = () => {
       window.removeEventListener('keydown', preventSpaceScroll);
     };
   }, []);
+
+  useEffect(() => {
+    // Fonction pour empêcher le scroll avec les flèches
+    const preventArrowScroll = (e) => {
+      if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) {
+        e.preventDefault();
+      }
+    };
+
+    // Ajouter l'écouteur d'événements quand le jeu est actif
+    if (gameState === 'PLAYING') {
+      window.addEventListener('keydown', preventArrowScroll);
+    }
+
+    // Nettoyer l'écouteur d'événements
+    return () => {
+      window.removeEventListener('keydown', preventArrowScroll);
+    };
+  }, [gameState]);
   // Déplacer les composants à l'intérieur de TetrisComponent
   const SkillThumbnail = ({ skill }) => (
     <div 
@@ -484,6 +491,32 @@ const ProjectModal = ({ project, onClose }) => {
         </div>
       </div>
     );
+  };
+
+  const showUnlockModal = (type, item) => {
+    // Détecter si on est sur mobile/tablette
+    const isMobileOrTablet = window.innerWidth <= 1024;
+    
+    // Durée différente selon le device
+    const duration = isMobileOrTablet ? 1500 : 1500; // 5 secondes sur mobile, 3 sur desktop
+
+    Swal.fire({
+      title: `${type} débloqué !`,
+      text: `Vous avez débloqué ${item.title || item.name}`,
+      icon: 'success',
+      timer: duration,
+      timerProgressBar: true,
+      showConfirmButton: false,
+      position: isMobileOrTablet ? 'center' : 'top-end',
+      toast: !isMobileOrTablet,
+      width: isMobileOrTablet ? '80%' : '300px',
+      padding: isMobileOrTablet ? '1em' : '0.5em',
+      customClass: {
+        popup: isMobileOrTablet ? 'mobile-unlock-modal' : 'desktop-unlock-modal',
+        title: 'text-lg font-bold',
+        content: 'text-base'
+      }
+    });
   };
 
   return (
