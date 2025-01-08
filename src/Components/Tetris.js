@@ -44,7 +44,7 @@ const projects = [
     lines: 4
   },
   {
-    id:4,
+    id: 4,
     title: 'Kasa',
     description: [
       'Refonte d\'une application de location immobilière avec React et React Router.',
@@ -151,6 +151,7 @@ const TetrisComponent = ({
       if (newUnlockedProjects.length > 0) {
         setUnlockedProjects([...unlockedProjects, ...newUnlockedProjects]);
         showUnlockModal('Projet', newUnlockedProjects[0]);
+        
       }
   
       if (newUnlockedSkillIds.length > 0) {
@@ -493,28 +494,41 @@ const ProjectModal = ({ project, onClose }) => {
     );
   };
 
-  const showUnlockModal = (type, item) => {
+  const showUnlockModal = (type, itemId) => {
+    // Trouver l'item débloqué dans les projets ou compétences
+    let unlockedItem;
+    if (type === 'Projet') {
+      unlockedItem = projects.find(project => project.id === itemId);
+    } else if (type === 'Compétence') {
+      unlockedItem = skills.find(skill => skill.id === itemId);
+    }
+
+    // Texte à afficher
+    const modalText = unlockedItem 
+      ? `Vous avez débloqué ${type === 'Projet' ? unlockedItem.title : 'les compétences'}`
+      : 'Nouvel élément débloqué !';
+
     // Détecter si on est sur mobile/tablette
     const isMobileOrTablet = window.innerWidth <= 1024;
     
     // Durée différente selon le device
-    const duration = isMobileOrTablet ? 1500 : 1500; // 5 secondes sur mobile, 3 sur desktop
+    const duration = isMobileOrTablet ? 2000 : 3000;
 
     Swal.fire({
       title: `${type} débloqué !`,
-      text: `Vous avez débloqué ${item.title || item.name}`,
+      text: modalText,
       icon: 'success',
       timer: duration,
       timerProgressBar: true,
       showConfirmButton: false,
-      position: isMobileOrTablet ? 'center' : 'top-end',
-      toast: !isMobileOrTablet,
-      width: isMobileOrTablet ? '80%' : '300px',
-      padding: isMobileOrTablet ? '1em' : '0.5em',
+      position: 'center',
+      toast: false,
+      width: '300px',
+      padding: '1em',
       customClass: {
-        popup: isMobileOrTablet ? 'mobile-unlock-modal' : 'desktop-unlock-modal',
-        title: 'text-lg font-bold',
-        content: 'text-base'
+        popup: 'unlock-modal',
+        title: 'text-xl font-bold',
+        content: 'text-lg'
       }
     });
   };

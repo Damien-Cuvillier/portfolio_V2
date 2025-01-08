@@ -1,37 +1,42 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import emailjs from '@emailjs/browser'; 
-import "../styles/contactform.css"
-const ContactForm = ({ showOnlyForm = false }) => {
-  useEffect(() => {
-    // Initialiser EmailJS
-    emailjs.init(process.env.REACT_APP_EMAILJS_TOKEN);
-  }, []);
+import "../styles/contactform.css";
 
+const WEB3FORMS_KEY = process.env.REACT_APP_WEB3FORMS_KEY;
+
+const ContactForm = ({ showOnlyForm = false }) => {
   const validationSchema = Yup.object({
     name: Yup.string().required('Required'),
     email: Yup.string().email('Invalid email address').required('Required'),
     message: Yup.string().required('Required'),
   });
 
-  const sendEmail = async (values, resetForm, setSubmitting) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      await emailjs.send(
-        process.env.REACT_APP_SERVICEID,
-        process.env.REACT_APP_TEMPLATEID,
-        {
+      const response = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
           name: values.name,
           email: values.email,
           message: values.message,
-        }
-      );
-      
-      alert('Message envoyé avec succès !');
-      resetForm();
+          subject: 'Nouveau message du portfolio'
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        alert('Message envoyé avec succès !');
+        resetForm();
+      } else {
+        alert('Erreur lors de l\'envoi du message.');
+      }
     } catch (error) {
-      console.error('Erreur:', error);
-      alert('Échec de l\'envoi du message, veuillez réessayer.');
+      alert('Erreur lors de l\'envoi du message.');
     } finally {
       setSubmitting(false);
     }
@@ -39,16 +44,14 @@ const ContactForm = ({ showOnlyForm = false }) => {
 
   return (
     <>
-      <div className={`contact-form-section ${showOnlyForm ? '' : 'h-screen'} md:mt-12`}>
+      <div className={`contact-form-section ${showOnlyForm ? '' : 'min-h-screen'} mt-12`}>
         <Formik
           initialValues={{ name: '', email: '', message: '' }}
           validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting, resetForm }) => {
-            sendEmail(values, resetForm, setSubmitting);
-          }}
+          onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <div className={`${showOnlyForm ? '' : 'min-h-screen'} bg-gray-200  flex items-center justify-center `}>
+            <div className={`${showOnlyForm ? '' : 'min-h-screen'} bg-gray-200 rounded-xl flex items-center justify-center`}>
               <div className="Form w-full max-w-2xl bg-gray-200 rounded-2xl shadow-xl p-8 mx-auto h-full">
                 <div className="text-center mb-8">
                   <h2 id='contacts' className='text-4xl font-bold text-gray-800 mb-4'>Contactez moi !</h2>
@@ -59,9 +62,6 @@ const ContactForm = ({ showOnlyForm = false }) => {
 
                 <Form className="space-y-6">
                   <div className="space-y-2">
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 bg-gray-100">
-                      
-                    </label>
                     <Field
                       type="text"
                       name="name"
@@ -72,9 +72,6 @@ const ContactForm = ({ showOnlyForm = false }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                     
-                    </label>
                     <Field
                       type="email"
                       name="email"
@@ -85,9 +82,6 @@ const ContactForm = ({ showOnlyForm = false }) => {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700">
-                     
-                    </label>
                     <Field
                       as="textarea"
                       name="message"
