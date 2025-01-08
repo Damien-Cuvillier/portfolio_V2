@@ -14,10 +14,13 @@ const ContactForm = ({ showOnlyForm = false }) => {
 
   const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
+      console.log('Envoi avec la clé:', WEB3FORMS_KEY);
+      
       const response = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({
           access_key: WEB3FORMS_KEY,
@@ -29,14 +32,17 @@ const ContactForm = ({ showOnlyForm = false }) => {
       });
 
       const data = await response.json();
+      console.log('Réponse:', data);
+
       if (data.success) {
         alert('Message envoyé avec succès !');
         resetForm();
       } else {
-        alert('Erreur lors de l\'envoi du message.');
+        alert(`Erreur: ${data.message || 'Une erreur est survenue'}`);
       }
     } catch (error) {
-      alert('Erreur lors de l\'envoi du message.');
+      console.error('Erreur détaillée:', error);
+      alert(`Erreur lors de l'envoi: ${error.message}`);
     } finally {
       setSubmitting(false);
     }
