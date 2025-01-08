@@ -114,7 +114,7 @@ const ProjectsCarousel = () => {
     };
 
     fetchLanguages();
-  }, [projects]);
+  }, []);
 
   useEffect(() => {
    
