@@ -24,7 +24,7 @@ jobs:
       - name: Build
         env:
           REACT_APP_WEB3FORMS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_KEY }}
-          REACT_APP_GITHUB_TOKEN: ${{ secrets.REACT_APP_GITHUB_TOKEN }}  # Correspond au nom exact de votre secret
+          REACT_APP_GITHUB_TOKEN: ${{ secrets.GH_TOKEN}}  # Correspond au nom exact de votre secret
         run: npm run build
 
       - name: Deploy
