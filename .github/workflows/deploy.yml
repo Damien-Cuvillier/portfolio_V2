@@ -3,13 +3,16 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main # ou master, selon votre branche principale
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
+      
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
@@ -20,7 +23,7 @@ jobs:
 
       - name: Build
         env:
-          REACT_APP_WEB3FORMS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_KEY }}
+          REACT_APP_WEB3FORMS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_KEY }}  # Correspond au nom exact de votre secret
         run: npm run build
 
       - name: Deploy
@@ -28,3 +31,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Deploy to GitHub Pages'
