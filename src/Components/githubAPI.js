@@ -2,9 +2,10 @@ const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
 export const fetchRepoLanguages = async (repoUrl) => {
   try {
-    if(!GITHUB_TOKEN) {
-      throw new Error("GitHub token is missing!");
-    }
+    console.log('Environment:', process.env.NODE_ENV);
+    
+    // L'URL est déjà correctement formée dans l'appel, pas besoin de la modifier
+    console.log('Fetching languages for repo:', repoUrl);
 
     const headers = {
       'Accept': 'application/vnd.github.v3+json',
@@ -12,12 +13,14 @@ export const fetchRepoLanguages = async (repoUrl) => {
       'X-GitHub-Api-Version': '2022-11-28'
     };
 
-    console.log('Fetching from URL:', repoUrl);
-    const response = await fetch(repoUrl, { headers });
+    // Utiliser directement l'URL fournie
+    const response = await fetch(repoUrl, {
+      headers
+    });
 
     if (!response.ok) {
       const errorData = await response.json();
-      console.error('API Response:', {
+      console.error('API Error Response:', {
         status: response.status,
         statusText: response.statusText,
         data: errorData
@@ -26,9 +29,10 @@ export const fetchRepoLanguages = async (repoUrl) => {
     }
 
     const data = await response.json();
+    console.log('Languages data received:', data);
     return data;
   } catch (error) {
-    console.error('Error in fetchRepoLanguages:', error);
+    console.error('Detailed error:', error);
     return { error: error.message };
   }
 };

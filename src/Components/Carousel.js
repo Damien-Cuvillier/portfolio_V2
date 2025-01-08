@@ -75,6 +75,7 @@ const ProjectsCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
+    console.log('ENV Token:', process.env.REACT_APP_GITHUB_TOKEN ? 'Token exists' : 'No token');
     const fetchLanguages = async () => {
       try {
         const updatedRepos = await Promise.all(
@@ -83,22 +84,27 @@ const ProjectsCarousel = () => {
               const repoName = project.projectURL.split('/').pop();
               console.log('Fetching languages for repo:', repoName);
               
-              const languages = await fetchRepoLanguages(`https://api.github.com/repos/Damien-Cuvillier/${repoName}/languages`);
+              const languagesUrl = `https://api.github.com/repos/Damien-Cuvillier/${repoName}/languages`;
+              const languages = await fetchRepoLanguages(languagesUrl);
               
               if (languages.error) {
                 console.error('Error fetching languages for', repoName, ':', languages.error);
                 return { ...project, languageData: [] };
               }
 
-              const totalBytes = Object.values(languages).reduce((a, b) => a + b, 0);
-              const languageData = Object.keys(languages).map(key => ({
-                name: key,
-                value: parseFloat(((languages[key] / totalBytes) * 100).toFixed(2)),
-              }));
+              if (Object.keys(languages).length > 0) {
+                const totalBytes = Object.values(languages).reduce((a, b) => a + b, 0);
+                const languageData = Object.entries(languages)
+                  .map(([key, value]) => ({
+                    name: key,
+                    value: parseFloat(((value / totalBytes) * 100).toFixed(2)),
+                  }))
+                  .sort((a, b) => b.value - a.value);
 
-              return { ...project, languageData };
+                return { ...project, languageData };
+              }
             }
-            return project;
+            return { ...project, languageData: [] };
           })
         );
         setRepos(updatedRepos);
@@ -108,7 +114,7 @@ const ProjectsCarousel = () => {
     };
 
     fetchLanguages();
-  }, []);
+  }, [projects]);
 
   useEffect(() => {
    
