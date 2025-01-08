@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main # ou master, selon votre branche principale
+      - main
 
 jobs:
   deploy:
@@ -23,16 +23,14 @@ jobs:
 
       - name: Build
         env:
-          REACT_APP_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Pour l'API GitHub
+          REACT_APP_GITHUB_TOKEN: ${{ secrets.REACT_APP_GITHUB_TOKEN }}
           REACT_APP_WEB3FORMS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_KEY }}
-          
         run: npm run build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}  # Token automatique pour le déploiement
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: 'Deploy to GitHub Pages'
