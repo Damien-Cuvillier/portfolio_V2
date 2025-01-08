@@ -1,8 +1,8 @@
-const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+const GH_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
 
 export const fetchRepoLanguages = async (repoUrl) => {
   try {
-    if (!GITHUB_TOKEN) {
+    if (!GH_TOKEN) {
       throw new Error("GitHub token is missing!");
     }
 
@@ -11,7 +11,7 @@ export const fetchRepoLanguages = async (repoUrl) => {
     const response = await fetch(repoUrl, {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
-        'Authorization': `Bearer ${GITHUB_TOKEN}`,
+        'Authorization': `Bearer ${GH_TOKEN}`,
         'X-GitHub-Api-Version': '2022-11-28'
       }
     });

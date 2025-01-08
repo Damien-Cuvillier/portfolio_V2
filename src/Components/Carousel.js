@@ -76,26 +76,35 @@ const ProjectsCarousel = () => {
 
   useEffect(() => {
     const fetchLanguages = async () => {
-      const updatedRepos = await Promise.all(
-        projects.map(async (project) => {
-          if (project.projectURL) {
-            const repoName = project.projectURL.split('/').pop();
-            const languages = await fetchRepoLanguages(`https://api.github.com/repos/Damien-Cuvillier/${repoName}/languages`);
-           
+      try {
+        const updatedRepos = await Promise.all(
+          projects.map(async (project) => {
+            if (project.projectURL) {
+              const repoName = project.projectURL.split('/').pop();
+              console.log('Fetching languages for repo:', repoName);
+              
+              const languages = await fetchRepoLanguages(`https://api.github.com/repos/Damien-Cuvillier/${repoName}/languages`);
+              
+              if (languages.error) {
+                console.error('Error fetching languages for', repoName, ':', languages.error);
+                return { ...project, languageData: [] };
+              }
 
-            const totalBytes = Object.values(languages).reduce((a, b) => a + b, 0);
-            const languageData = Object.keys(languages).map(key => ({
-              name: key,
-              value: parseFloat(((languages[key] / totalBytes) * 100).toFixed(2)),
-            }));
-            
+              const totalBytes = Object.values(languages).reduce((a, b) => a + b, 0);
+              const languageData = Object.keys(languages).map(key => ({
+                name: key,
+                value: parseFloat(((languages[key] / totalBytes) * 100).toFixed(2)),
+              }));
 
-            return { ...project, languageData };
-          }
-          return project;
-        })
-      );
-      setRepos(updatedRepos);
+              return { ...project, languageData };
+            }
+            return project;
+          })
+        );
+        setRepos(updatedRepos);
+      } catch (error) {
+        console.error('Error in fetchLanguages:', error);
+      }
     };
 
     fetchLanguages();

@@ -23,8 +23,9 @@ jobs:
 
       - name: Build
         env:
-          REACT_APP_WEB3FORMS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_KEY }}
           REACT_APP_GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}  # Pour l'API GitHub
+          REACT_APP_WEB3FORMS_KEY: ${{ secrets.REACT_APP_WEB3FORMS_KEY }}
+          
         run: npm run build
 
       - name: Deploy
