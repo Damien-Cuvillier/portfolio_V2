@@ -87,6 +87,7 @@ const projects = [
       'Design responsive avec Tailwind CSS',
       'Utilisation de formik et yup pour la gestion du formulaire',
       'React SEO pour l\'optimisation des moteurs de recherche',
+      'Système de préremplissage du formulaire de contact en lien avec les boutons de réservations',
     ],
       imageUrl: process.env.PUBLIC_URL + '/images/Taib-massages.webp',
     projectURL:'https://github.com/Damien-Cuvillier/Taib-massages'
