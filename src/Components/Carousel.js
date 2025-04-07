@@ -68,6 +68,29 @@ const projects = [
       imageUrl: process.env.PUBLIC_URL + '/images/MenuMaker.webp',
     projectURL:''
   },
+  {
+    title: 'Portfolio Magali Payard Photographe',
+    description: [
+      'Elaboration du portfolio de la photographe Magali Payard.',
+      'Utilisation de Schéma.org pour le SEO local',
+      'Optimisation des images pour la vitesse de chargement',
+      'Configuration responsive',
+      'Gestion de galerie photo custom'
+    ],
+      imageUrl: process.env.PUBLIC_URL + '/images/Magali-Payard-Photographe.webp',
+    projectURL:'https://github.com/Damien-Cuvillier/Magali-Payard-Photographe'
+  },
+  {
+    title: 'Taib-massages',
+    description: [
+      'Développement du site de masseur Taib-massages.',
+      'Design responsive avec Tailwind CSS',
+      'Utilisation de formik et yup pour la gestion du formulaire',
+      'React SEO pour l\'optimisation des moteurs de recherche',
+    ],
+      imageUrl: process.env.PUBLIC_URL + '/images/Taib-massages.webp',
+    projectURL:'https://github.com/Damien-Cuvillier/Taib-massages'
+  },
   // Ajouter plus de projets ici
 ];
 const ProjectsCarousel = () => {
@@ -130,7 +153,7 @@ const ProjectsCarousel = () => {
         onChange={(index) => setCurrentSlide(index)}
       >
         {repos.map((repo, index) => (
-          <div className="bg-gray-100 max-w-full flex-col mx-auto h-full" key={index}>
+          <div className=" max-w-full flex-col mx-auto h-full" key={index}>
             <div className="Carrou relative pb-8">
               <img src={repo.imageUrl} alt={repo.title} className="w-full h-64 object-cover rounded-md" />
             </div>
@@ -138,7 +161,7 @@ const ProjectsCarousel = () => {
         ))}
       </Carousel>
       {repos[currentSlide] && (
-        <div className={`legend flex flex-col ${repos[currentSlide].projectURL ? "md:flex-row" : "justify-center"} items-start bg-gray-100 p-4 rounded-md shadow-md w-full max-w-3xl mx-auto overflow-y-auto`}>
+        <div className={`legend flex flex-col ${repos[currentSlide].projectURL ? "md:flex-row" : "justify-center"} items-start p-4 rounded-md shadow-md w-full max-w-3xl mx-auto overflow-y-auto`}>
           {repos[currentSlide].projectURL && (
             <div className="graphGithub w-full md:w-1/2">
               <a className="mt-2 py-2 text-sm text-gray-800 font-bold hover:underline relative" href={repos[currentSlide].projectURL} target="_blank" rel="noopener noreferrer">
