@@ -9,13 +9,19 @@ import LangageGithub from './LangageGithub';
 
 const projects = [
   {
-    title: 'Booki',
+    title: 'Artiplan',
     description: [
-      'Booki est un site pour permettre aux usagers de trouver des hébergements et des activités dans la ville de leur choix.',
-      'Pour ce projet j\'ai effectué la création de la page d\'accueil de l\'agence de voyage en HTML et CSS ainsi que l\'intégration de l\'interface responsive du site.'
+      '🏗️ Développement d\'une application complète de gestion de chantiers pour votre entreprise.',
+      'En React et Node.js avec MongoDB',
+      ' Interface web responsive',
+      ' Authentification JWT sécurisée',
+      ' CRUD chantiers et interventions',
+      ' Export PDF',
+      ' Notifications en temps réel',
     ],
-    imageUrl: process.env.PUBLIC_URL + '/images/Booki.webp',
-    projectURL: 'https://github.com/Damien-Cuvillier/Projet-2-Booki'
+    imageUrl: process.env.PUBLIC_URL + '/images/Artiplan.webp',
+    projectURL: 'https://github.com/Damien-Cuvillier/Artiplan',
+    siteURL: 'https://artiplan.vercel.app/login',
   },
   {
     title: 'Sophie Bluel Architecte d\'intérieur',
@@ -30,9 +36,9 @@ const projects = [
     title: 'Nina Carducci Photographe',
     description: [
       'Débuggage et optimisation.',
-      'Dans ce projet je devais optimiser le référencement du site, en améliorant sa performance et son accessibilité.', 
-      'Je devais identifier les problèmes de chargement et de référencement avec des outils comme Lighthouse ou Wave pour évaluer les performances du site et son accessibilité.',
-      'Je devais élaborer des recommandations pour améliorer la vitesse de chargement, la structure du code et le référencement, dans un rapport.',
+      'Optimisation du référencement du site, en améliorant sa performance et son accessibilité.', 
+      'Identification des problèmes de chargement et de référencement avec des outils comme Lighthouse ou Wave',
+      'Amélioration de la vitesse de chargement, la structure du code et le référencement, dans un rapport.',
     ],
     imageUrl: process.env.PUBLIC_URL + '/images/Nina.webp',
     projectURL: 'https://github.com/Damien-Cuvillier/P4-Nina-Carducci'
@@ -41,8 +47,8 @@ const projects = [
     title: 'Kasa',
     description: [
       'Refonte d\'une application de location immobilière',
-      'Kasa est une application React de location d\'appartement entre particuliers en France, j\'ai du utiliser React Router pour configurer la navigation entre les différentes pages de l\'application.',
-      'Pour ce projet j\'ai développé les différentes pages de l\'application (Accueil, A propos, Détails de location, 404) ainsi que les composants présents sur ces pages (Carrousel, slider, collapse, grid, banner)',
+      'Kasa est une application React de location d\'appartement entre particuliers en France, avec React Router pour configurer la navigation entre les différentes pages de l\'application.',
+      'Développement des différentes pages de l\'application ainsi que les composants présents sur ces pages',
     ],
       imageUrl: process.env.PUBLIC_URL + '/images/Kasa.webp',
     projectURL:'https://github.com/Damien-Cuvillier/P5_Kasa'
@@ -52,21 +58,9 @@ const projects = [
     description: [
       'Développement du back-end d\'un site de notation de livres.',
       'Dans ce projet je devais créer un serveur avec Express et de le connecter à une base de données MongoDB, développer les modèles de données et implémenter la gestion des livres et des notations, implémenter un système d\'authentification sécurisé pour les utilisateurs du site.',
-      'Je devais prendre en compte la gestion du téléchargement et de l\'optimisation des images, et respecter les bonnes pratiques du Green Code.',
     ],
       imageUrl: process.env.PUBLIC_URL + '/images/Grimoire.webp',
     projectURL:'https://github.com/Damien-Cuvillier/P6_Grimoire'
-  },
-  {
-    title: 'Menu Maker by Qwenta',
-    description: [
-      'Planification du développement du site de Menu Maker.',
-      'Dans ce projet j\'ai mis en place une veille technologique pour rester informé des dernières tendances et technologies pertinentes pour le projet.',
-      'Je me suis chargé de rédiger les spécifications techniques du projet donc l\'identification des besoins fonctionnels et la décomposition des fonctionnalités en tâches spécifiques.',
-      'J\'ai aussi utilisé un outil de gestion de projet, comme Notion, pour organiser le projet et créer un tableau Kanban. Présentation des résultats dans un rapport d\'intervention',
-    ],
-      imageUrl: process.env.PUBLIC_URL + '/images/MenuMaker.webp',
-    projectURL:''
   },
   {
     title: 'Portfolio Magali Payard Photographe',
@@ -175,7 +169,16 @@ const ProjectsCarousel = () => {
           )}
           <div className={`w-full ${repos[currentSlide].projectURL ? "md:w-1/2 md:mt-0 md:ml-4" : "text-center"}`}>
             <h3 className="text-xl font-bold text-gray-800 mb-2">{repos[currentSlide].title}</h3>
-            
+            {repos[currentSlide].siteURL && (
+              <a
+                href={repos[currentSlide].siteURL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xl font-bold text-blue-700 hover:underline mb-2 block"
+              >
+                {repos[currentSlide].title}
+              </a>
+            )}
             {repos[currentSlide].description && (
               <ul className="description list-disc list-inside text-gray-600 text-sm">
                 {repos[currentSlide].description.map((desc, descIndex) => (
